@@ -1,44 +1,21 @@
 import { useState } from 'react';
 import { Button, TextField, Container, Typography, Box, Alert } from '@mui/material';
-import axios from 'axios';
-import { AUTH_URL } from '../services/api';
+import { useNavigate } from 'react-router-dom'; // <-- Importamos la herramienta de redirección
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const navigate = useNavigate(); // <-- La inicializamos
 
-    const handleLogin = async (e) => {
+    const handleLogin = (e) => {
         e.preventDefault();
         
-        // Estas credenciales las llenaremos cuando tu amigo termine su parte del backend
-        const CLIENT_ID = 'PENDIENTE';
-        const CLIENT_SECRET = 'PENDIENTE';
-
-        // OAuth 2.0 exige este formato específico (URL Encoded)
-        const data = new URLSearchParams();
-        data.append('grant_type', 'password');
-        data.append('username', username);
-        data.append('password', password);
-        data.append('client_id', CLIENT_ID);
-        data.append('client_secret', CLIENT_SECRET);
-
-        try {
-            const response = await axios.post(AUTH_URL, data, {
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-            });
-            
-            // Guardamos el token recibido
-            localStorage.setItem('access_token', response.data.access_token);
-            alert("¡Login exitoso! Ya tienes tu Token de acceso.");
-            
-            // Más adelante activaremos esta redirección
-            // window.location.href = '/artistas';
-
-        } catch (err) {
-            console.error(err);
-            setError('Credenciales inválidas o el backend aún no está conectado.');
-        }
+        // --- HACK TEMPORAL PARA SALTAR EL LOGIN ---
+        // Guardamos un token falso para que la app crea que iniciamos sesión
+        localStorage.setItem('access_token', 'token_falso_de_prueba');
+        
+        // Te enviamos directamente a la pantalla de Artistas
+        navigate('/artistas');
     };
 
     return (
@@ -47,8 +24,6 @@ const Login = () => {
                 <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
                     🎵 Catálogo Musical
                 </Typography>
-                
-                {error && <Alert severity="error" sx={{ width: '100%', mb: 2 }}>{error}</Alert>}
 
                 <Box component="form" onSubmit={handleLogin} sx={{ width: '100%' }}>
                     <TextField
@@ -76,7 +51,7 @@ const Login = () => {
                         size="large"
                         sx={{ mt: 3, mb: 2 }}
                     >
-                        Iniciar Sesión
+                        Iniciar Sesión (Modo Prueba)
                     </Button>
                 </Box>
             </Box>
