@@ -1,24 +1,28 @@
 import axios from 'axios';
 
-// 1. Configuramos la URL base donde vive la API de tu amigo
-export const api = axios.create({
-    baseURL: 'http://localhost:8000/api/',
-});
+// URL base para el CRUD (la que configuró tu amigo con el Router)
+export const API_URL = 'http://localhost:8000/api/';
 
-// 2. Guardamos la URL específica para el Login (OAuth 2.0)
+// URL específica para pedir el token de seguridad
 export const AUTH_URL = 'http://localhost:8000/o/token/';
 
-// 3. El Interceptor: Nuestro "Guardia de Seguridad"
-// Antes de enviar CUALQUIER petición al backend, este código se ejecuta automáticamente
-api.interceptors.request.use((config) => {
-    // Busca si tenemos guardado el "pase VIP" (el Token) en la memoria del navegador
-    const token = localStorage.getItem('access_token');
-    
-    if (token) {
-        // Si existe, se lo pega a la petición para que Django nos deje pasar
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-}, (error) => {
-    return Promise.reject(error);
+const api = axios.create({
+    baseURL: API_URL,
 });
+
+// Interceptor: Antes de que salga cualquier petición, le pegamos el token
+api.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
+// ¡ESTA ES LA LÍNEA MÁGICA QUE TE FALTABA!
+export default api;

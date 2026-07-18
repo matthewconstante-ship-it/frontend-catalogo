@@ -1,36 +1,46 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
     Container, Typography, Button, Box, Paper, Table, TableBody, TableCell, 
     TableContainer, TableHead, TableRow, Dialog, DialogTitle, DialogContent, 
     DialogActions, TextField, DialogContentText
 } from '@mui/material';
 import Navbar from '../components/Navbar';
-
-// Datos iniciales
-const datosIniciales = [
-    { id: 1, nombre: 'Daft Punk', genero: 'Electrónica', biografia: 'Dúo francés...' },
-    { id: 2, nombre: 'The Weeknd', genero: 'R&B / Pop', biografia: 'Cantante canadiense...' },
-];
+import api from '../services/api'; 
+import './Artistas.css'; 
 
 const Artistas = () => {
-    // 1. Estado para almacenar los artistas en pantalla
-    const [artistas, setArtistas] = useState(datosIniciales);
-    
-    // 2. Estados para los Modales
+    const [artistas, setArtistas] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [modalMode, setModalMode] = useState('crear');
-    
-    // 3. Estado para guardar los datos del formulario temporalmente
     const [formData, setFormData] = useState({ id: null, nombre: '', genero: '', biografia: '' });
 
-    // --- FUNCIONES PARA ABRIR/CERRAR MODALES ---
+    // --- 1. LEER (Carga inicial) ---
+    // Al meter la función aquí adentro, el linter de Vite deja de molestar
+    useEffect(() => {
+        const fetchArtistas = async () => {
+            try {
+                const response = await api.get('artistas/');
+                // Seguro contra pantallas en blanco: verificamos que sea una lista
+                if (Array.isArray(response.data)) {
+                    setArtistas(response.data);
+                } else if (response.data.results) {
+                    setArtistas(response.data.results);
+                }
+            } catch (error) {
+                console.error("Error al cargar los artistas:", error);
+            }
+        };
+        fetchArtistas();
+    }, []);
+
+    // --- FUNCIONES DE MODALES ---
     const handleOpen = (modo, artista = null) => {
         setModalMode(modo);
         if (modo === 'editar' && artista) {
-            setFormData(artista); // Llenamos el formulario con los datos a editar
+            setFormData(artista);
         } else {
-            setFormData({ id: null, nombre: '', genero: '', biografia: '' }); // Formulario vacío
+            setFormData({ id: null, nombre: '', genero: '', biografia: '' });
         }
         setOpenModal(true);
     };
@@ -45,23 +55,42 @@ const Artistas = () => {
         setOpenDeleteModal(false);
     };
 
-    // --- FUNCIONES QUE SIMULAN EL CRUD (Aquí luego irá Axios) ---
-    const handleSave = () => {
-        if (modalMode === 'crear') {
-            // Simulamos crear asignando un ID al azar
-            const nuevoArtista = { ...formData, id: Date.now() };
-            setArtistas([...artistas, nuevoArtista]);
-        } else {
-            // Simulamos editar buscando el ID y reemplazándolo
-            setArtistas(artistas.map(a => (a.id === formData.id ? formData : a)));
+    // --- 2. CREAR Y ACTUALIZAR (Actualización Optimista) ---
+    const handleSave = async () => {
+        try {
+            if (modalMode === 'crear') {
+                const response = await api.post('artistas/', {
+                    nombre: formData.nombre,
+                    genero: formData.genero,
+                    biografia: formData.biografia
+                });
+                // Agregamos el nuevo artista directamente a la tabla al instante
+                setArtistas([...artistas, response.data]);
+            } else {
+                const response = await api.put(`artistas/${formData.id}/`, {
+                    nombre: formData.nombre,
+                    genero: formData.genero,
+                    biografia: formData.biografia
+                });
+                // Reemplazamos el artista editado en la tabla al instante
+                setArtistas(artistas.map(a => (a.id === formData.id ? response.data : a)));
+            }
+            handleClose();
+        } catch (error) {
+            console.error("Error al guardar el artista:", error);
         }
-        handleClose();
     };
 
-    const handleDelete = () => {
-        // Simulamos eliminar filtrando el que no queremos
-        setArtistas(artistas.filter(a => a.id !== formData.id));
-        handleClose();
+    // --- 3. ELIMINAR (Actualización Optimista) ---
+    const handleDelete = async () => {
+        try {
+            await api.delete(`artistas/${formData.id}/`);
+            // Lo borramos de la tabla visualmente al instante
+            setArtistas(artistas.filter(a => a.id !== formData.id));
+            handleClose();
+        } catch (error) {
+            console.error("Error al eliminar el artista:", error);
+        }
     };
 
     return (
@@ -88,7 +117,8 @@ const Artistas = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {artistas.map((artista) => (
+                            {/* El signo de interrogación es el escudo anti-pantallas en blanco */}
+                            {artistas?.map((artista) => (
                                 <TableRow key={artista.id}>
                                     <TableCell>{artista.id}</TableCell>
                                     <TableCell>{artista.nombre}</TableCell>
@@ -108,7 +138,7 @@ const Artistas = () => {
                 </TableContainer>
             </Container>
 
-            {/* --- MODAL PARA CREAR/EDITAR --- */}
+            {/* MODAL PARA CREAR/EDITAR */}
             <Dialog open={openModal} onClose={handleClose} maxWidth="sm" fullWidth>
                 <DialogTitle>
                     {modalMode === 'crear' ? 'Crear Nuevo Artista' : 'Editar Artista'}
@@ -136,7 +166,7 @@ const Artistas = () => {
                 </DialogActions>
             </Dialog>
 
-            {/* --- MODAL DE CONFIRMACIÓN PARA ELIMINAR --- */}
+            {/* MODAL DE CONFIRMACIÓN PARA ELIMINAR */}
             <Dialog open={openDeleteModal} onClose={handleClose}>
                 <DialogTitle>¿Confirmar eliminación?</DialogTitle>
                 <DialogContent>
