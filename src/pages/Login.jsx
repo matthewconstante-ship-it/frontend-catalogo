@@ -1,87 +1,87 @@
 import { useState } from 'react';
-import { Button, TextField, Container, Typography, Box, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { Typography, TextField, Button, Alert } from '@mui/material';
 import axios from 'axios';
+import PageTransition from '../components/PageTransition';
 import { AUTH_URL } from '../services/api';
 import './Login.css';
 
 const Login = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [formData, setFormData] = useState({ username: '', password: '' });
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
         
-        // LLAVES REALES DE TU BACKEND LOCAL
-        const CLIENT_ID = 'qxjtinrXCp2JtCLmBhsyFw14JfqmbONSlTc322lf';
-        const CLIENT_SECRET = '8V59oZ3ZHfnB42pQqksTmBJTdHXoMW1DywA7V7plmQFDiDMymGu1TDhiHW9V75kuJd0g6qqiZjxKOSLaAJPqN0JVp1SS9mFllRmYm0giWh8CUodR5dnzjscL7TDgUbFX';
-
-        const data = new URLSearchParams();
-        data.append('grant_type', 'password');
-        data.append('username', username);
-        data.append('password', password);
-        data.append('client_id', CLIENT_ID);
-        data.append('client_secret', CLIENT_SECRET);
+        const loginData = new FormData();
+        loginData.append('username', formData.username);
+        loginData.append('password', formData.password);
+        loginData.append('grant_type', 'password');
+        
+        // Usando variables de entorno desde .env
+        loginData.append('client_id', import.meta.env.VITE_CLIENT_ID); 
+        loginData.append('client_secret', import.meta.env.VITE_CLIENT_SECRET);
 
         try {
-            const response = await axios.post(AUTH_URL, data, {
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-            });
+            const response = await axios.post(AUTH_URL, loginData);
             
-            // Guardamos el token real recibido del backend
+            // Guardamos el token
             localStorage.setItem('access_token', response.data.access_token);
             
-            // Redireccionamos a la pantalla principal
             navigate('/artistas');
-
         } catch (err) {
             console.error(err);
-            setError('Credenciales inválidas. Verifica tu usuario y contraseña.');
+            setError('Error al iniciar sesión. Verifica tus credenciales.');
         }
     };
 
     return (
-        <Container maxWidth="xs">
-            <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
-                    🎵 Catálogo Musical
-                </Typography>
-                
-                {error && <Alert severity="error" sx={{ width: '100%', mb: 2 }}>{error}</Alert>}
+        <PageTransition>
+            <div className="login-page-wrapper">
+                <div className="login-form-container">
+                    <Typography variant="h4" className="login-title">
+                        Bienvenido
+                    </Typography>
 
-                <Box component="form" onSubmit={handleLogin} sx={{ width: '100%' }}>
-                    <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        label="Usuario"
-                        autoFocus
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                    <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        label="Contraseña"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        size="large"
-                        sx={{ mt: 3, mb: 2 }}
-                    >
-                        Iniciar Sesión
-                    </Button>
-                </Box>
-            </Box>
-        </Container>
+                    {error && (
+                        <Alert severity="error" sx={{ mb: 2, borderRadius: '8px' }}>
+                            {error}
+                        </Alert>
+                    )}
+
+                    <form onSubmit={handleLogin}>
+                        <TextField
+                            fullWidth
+                            margin="normal"
+                            label="Nombre de usuario"
+                            variant="outlined"
+                            value={formData.username}
+                            onChange={(e) => setFormData({...formData, username: e.target.value})}
+                        />
+                        <TextField
+                            fullWidth
+                            margin="normal"
+                            label="Contraseña"
+                            type="password"
+                            variant="outlined"
+                            value={formData.password}
+                            onChange={(e) => setFormData({...formData, password: e.target.value})}
+                        />
+                        
+                        <Button 
+                            className="login-button"
+                            type="submit"
+                            variant="contained" 
+                            fullWidth
+                            size="large"
+                        >
+                            Entrar
+                        </Button>
+                    </form>
+                </div>
+            </div>
+        </PageTransition>
     );
 };
 

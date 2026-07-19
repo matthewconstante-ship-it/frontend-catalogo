@@ -1,0 +1,10 @@
+/* src/components/Navbar.css */
+.navbar-container {
+    backdrop-filter: blur(10px); /* Efecto vidrio esmerilado */
+    background: rgba(99, 102, 241, 0.95) !important; /* Tu color primario con transparencia */
+    transition: all 0.3s ease;
+}
+
+.navbar-container:hover {
+    background: rgba(99, 102, 241, 1) !important;
+}

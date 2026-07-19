@@ -1,0 +1,42 @@
+/* src/pages/Login.css */
+
+/* Contenedor principal que centra todo en la pantalla */
+.login-page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); /* Fondo suave */
+    padding: 20px;
+}
+
+/* El contenedor del formulario (La "tarjeta") */
+.login-form-container {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    width: 100%;
+    max-width: 400px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-form-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.15);
+}
+
+/* Título estilizado */
+.login-title {
+    text-align: center;
+    margin-bottom: 2rem !important;
+    color: #1e293b;
+    font-weight: 800 !important;
+}
+
+/* Botón con efecto de presionado */
+.login-button {
+    margin-top: 1.5rem !important;
+    padding: 12px !important;
+    font-size: 1rem !important;
+}

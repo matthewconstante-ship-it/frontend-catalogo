@@ -1,0 +1,26 @@
+/* src/pages/Artistas.css y Albumes.css (puedes usar el mismo código en ambos) */
+
+/* Efecto al pasar el cursor sobre las filas de la tabla */
+.MuiTableRow-root:hover {
+    background-color: #f1f5f9 !important;
+    transition: background-color 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+/* Elevación suave para los contenedores principales */
+.MuiPaper-root {
+    transition: box-shadow 0.3s ease-in-out !important;
+}
+
+.MuiPaper-root:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Mejora estética para los botones dentro de la tabla */
+.MuiButton-root {
+    transition: transform 0.2s ease !important;
+}
+
+.MuiButton-root:hover {
+    transform: translateY(-2px);
+}
