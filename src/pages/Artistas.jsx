@@ -2,26 +2,30 @@ import { useState, useEffect } from 'react';
 import { 
     Container, Typography, Button, Box, Paper, Table, TableBody, TableCell, 
     TableContainer, TableHead, TableRow, Dialog, DialogTitle, DialogContent, 
-    DialogActions, TextField, DialogContentText
+    DialogActions, TextField, DialogContentText, InputAdornment
 } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search'; // Tarjeta de presentación profesional
 import Navbar from '../components/Navbar';
 import api from '../services/api'; 
 import './Artistas.css'; 
 
 const Artistas = () => {
     const [artistas, setArtistas] = useState([]);
+    const [busqueda, setBusqueda] = useState(''); // <-- NUEVO: Estado para guardar lo que escribe el usuario
+    
+    // Estados para los Modales
     const [openModal, setOpenModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [modalMode, setModalMode] = useState('crear');
+    
+    // Estado del formulario
     const [formData, setFormData] = useState({ id: null, nombre: '', genero: '', biografia: '' });
 
     // --- 1. LEER (Carga inicial) ---
-    // Al meter la función aquí adentro, el linter de Vite deja de molestar
     useEffect(() => {
         const fetchArtistas = async () => {
             try {
                 const response = await api.get('artistas/');
-                // Seguro contra pantallas en blanco: verificamos que sea una lista
                 if (Array.isArray(response.data)) {
                     setArtistas(response.data);
                 } else if (response.data.results) {
@@ -64,7 +68,6 @@ const Artistas = () => {
                     genero: formData.genero,
                     biografia: formData.biografia
                 });
-                // Agregamos el nuevo artista directamente a la tabla al instante
                 setArtistas([...artistas, response.data]);
             } else {
                 const response = await api.put(`artistas/${formData.id}/`, {
@@ -72,7 +75,6 @@ const Artistas = () => {
                     genero: formData.genero,
                     biografia: formData.biografia
                 });
-                // Reemplazamos el artista editado en la tabla al instante
                 setArtistas(artistas.map(a => (a.id === formData.id ? response.data : a)));
             }
             handleClose();
@@ -85,7 +87,6 @@ const Artistas = () => {
     const handleDelete = async () => {
         try {
             await api.delete(`artistas/${formData.id}/`);
-            // Lo borramos de la tabla visualmente al instante
             setArtistas(artistas.filter(a => a.id !== formData.id));
             handleClose();
         } catch (error) {
@@ -93,17 +94,45 @@ const Artistas = () => {
         }
     };
 
+    // --- NUEVO: FILTRADO EN VIVO ---
+    // Filtramos los artistas por nombre o género según lo que se escriba, ignorando mayúsculas/minúsculas
+    const artistasFiltrados = artistas.filter((artista) => {
+        const termino = busqueda.toLowerCase();
+        return (
+            artista.nombre.toLowerCase().includes(termino) ||
+            artista.genero.toLowerCase().includes(termino)
+        );
+    });
+
     return (
         <>
             <Navbar />
             <Container maxWidth="lg" sx={{ mt: 4 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                     <Typography variant="h4" component="h1">
                         Gestión de Artistas
                     </Typography>
                     <Button variant="contained" color="primary" onClick={() => handleOpen('crear')}>
                         + Nuevo Artista
                     </Button>
+                </Box>
+
+                {/* NUEVO: Contenedor para la barra de búsqueda */}
+                <Box sx={{ mb: 3 }}>
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        placeholder="Buscar artista por nombre o género musical..."
+                        value={busqueda}
+                        onChange={(e) => setBusqueda(e.target.value)}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon color="action" />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
                 </Box>
 
                 <TableContainer component={Paper} elevation={3}>
@@ -117,8 +146,8 @@ const Artistas = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {/* El signo de interrogación es el escudo anti-pantallas en blanco */}
-                            {artistas?.map((artista) => (
+                            {/* CAMBIO: Ahora recorremos 'artistasFiltrados' en lugar de 'artistas' */}
+                            {artistasFiltrados?.map((artista) => (
                                 <TableRow key={artista.id}>
                                     <TableCell>{artista.id}</TableCell>
                                     <TableCell>{artista.nombre}</TableCell>
@@ -133,6 +162,14 @@ const Artistas = () => {
                                     </TableCell>
                                 </TableRow>
                             ))}
+                            {/* Si la búsqueda no arroja resultados, mostramos un mensaje amigable */}
+                            {artistasFiltrados.length === 0 && artistas.length > 0 && (
+                                <TableRow>
+                                    <TableCell colSpan={4} align="center" sx={{ py: 3, color: 'text.secondary' }}>
+                                        No se encontraron artistas que coincidan con "{busqueda}"
+                                    </TableCell>
+                                </TableRow>
+                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>

@@ -2,15 +2,17 @@ import { useState, useEffect } from 'react';
 import { 
     Container, Typography, Button, Box, Paper, Table, TableBody, TableCell, 
     TableContainer, TableHead, TableRow, Dialog, DialogTitle, DialogContent, 
-    DialogActions, TextField, MenuItem, DialogContentText
+    DialogActions, TextField, MenuItem, DialogContentText, InputAdornment
 } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import Navbar from '../components/Navbar';
 import api from '../services/api'; 
 import './Albumes.css'; 
 
 const Albumes = () => {
     const [albumes, setAlbumes] = useState([]);
-    const [artistasDisponibles, setArtistasDisponibles] = useState([]); // Para la lista desplegable
+    const [artistasDisponibles, setArtistasDisponibles] = useState([]);
+    const [busqueda, setBusqueda] = useState(''); // <-- NUEVO: Estado para el filtro
     
     const [openModal, setOpenModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -18,24 +20,21 @@ const Albumes = () => {
     
     const [formData, setFormData] = useState({ id: null, titulo: '', fecha_lanzamiento: '', artista: '' });
 
-    // --- 1. LEER (Cargar Álbumes y Artistas al entrar a la página) ---
+    // --- 1. LEER (Cargar Álbumes y Artistas) ---
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Pedimos ambas listas al mismo tiempo
                 const [resAlbumes, resArtistas] = await Promise.all([
                     api.get('albumes/'),
                     api.get('artistas/')
                 ]);
 
-                // Guardamos los álbumes
                 if (Array.isArray(resAlbumes.data)) {
                     setAlbumes(resAlbumes.data);
                 } else if (resAlbumes.data.results) {
                     setAlbumes(resAlbumes.data.results);
                 }
 
-                // Guardamos los artistas para poder seleccionarlos al crear un álbum
                 if (Array.isArray(resArtistas.data)) {
                     setArtistasDisponibles(resArtistas.data);
                 } else if (resArtistas.data.results) {
@@ -49,7 +48,6 @@ const Albumes = () => {
         fetchData();
     }, []);
 
-    // --- FUNCIONES DE MODALES ---
     const handleOpen = (modo, album = null) => {
         setModalMode(modo);
         if (modo === 'editar' && album) {
@@ -70,14 +68,14 @@ const Albumes = () => {
         setOpenDeleteModal(false);
     };
 
-    // --- 2. CREAR Y ACTUALIZAR (Actualización Optimista) ---
+    // --- 2. CREAR Y ACTUALIZAR ---
     const handleSave = async () => {
         try {
             if (modalMode === 'crear') {
                 const response = await api.post('albumes/', {
                     titulo: formData.titulo,
                     fecha_lanzamiento: formData.fecha_lanzamiento,
-                    artista: formData.artista // Enviamos el ID del artista seleccionado
+                    artista: formData.artista 
                 });
                 setAlbumes([...albumes, response.data]);
             } else {
@@ -94,7 +92,7 @@ const Albumes = () => {
         }
     };
 
-    // --- 3. ELIMINAR (Actualización Optimista) ---
+    // --- 3. ELIMINAR ---
     const handleDelete = async () => {
         try {
             await api.delete(`albumes/${formData.id}/`);
@@ -105,23 +103,51 @@ const Albumes = () => {
         }
     };
 
-    // Función auxiliar para mostrar el nombre del artista en lugar de su ID en la tabla
     const getNombreArtista = (idArtista) => {
         const artista = artistasDisponibles.find(a => a.id === idArtista);
         return artista ? artista.nombre : 'Desconocido';
     };
 
+    // --- NUEVO: FILTRADO EN VIVO ---
+    const albumesFiltrados = albumes.filter((album) => {
+        const termino = busqueda.toLowerCase();
+        const nombreDelArtista = getNombreArtista(album.artista).toLowerCase();
+        
+        return (
+            album.titulo.toLowerCase().includes(termino) ||
+            nombreDelArtista.includes(termino)
+        );
+    });
+
     return (
         <>
             <Navbar />
             <Container maxWidth="lg" sx={{ mt: 4 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                     <Typography variant="h4" component="h1">
                         Gestión de Álbumes
                     </Typography>
                     <Button variant="contained" color="secondary" onClick={() => handleOpen('crear')}>
                         + Nuevo Álbum
                     </Button>
+                </Box>
+
+                {/* NUEVO: Contenedor para la barra de búsqueda */}
+                <Box sx={{ mb: 3 }}>
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        placeholder="Buscar álbum por título o nombre del artista..."
+                        value={busqueda}
+                        onChange={(e) => setBusqueda(e.target.value)}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon color="action" />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
                 </Box>
 
                 <TableContainer component={Paper} elevation={3}>
@@ -136,12 +162,12 @@ const Albumes = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {albumes?.map((album) => (
+                            {/* CAMBIO: Usamos albumesFiltrados */}
+                            {albumesFiltrados?.map((album) => (
                                 <TableRow key={album.id}>
                                     <TableCell>{album.id}</TableCell>
                                     <TableCell>{album.titulo}</TableCell>
                                     <TableCell>{album.fecha_lanzamiento}</TableCell>
-                                    {/* Aquí usamos la función auxiliar para traducir el ID a nombre */}
                                     <TableCell>{getNombreArtista(album.artista)}</TableCell>
                                     <TableCell align="right">
                                         <Button size="small" color="info" sx={{ mr: 1 }} onClick={() => handleOpen('editar', album)}>
@@ -153,12 +179,19 @@ const Albumes = () => {
                                     </TableCell>
                                 </TableRow>
                             ))}
+                            {/* Mensaje si no hay resultados */}
+                            {albumesFiltrados.length === 0 && albumes.length > 0 && (
+                                <TableRow>
+                                    <TableCell colSpan={5} align="center" sx={{ py: 3, color: 'text.secondary' }}>
+                                        No se encontraron álbumes que coincidan con "{busqueda}"
+                                    </TableCell>
+                                </TableRow>
+                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>
             </Container>
 
-            {/* MODAL PARA CREAR/EDITAR */}
             <Dialog open={openModal} onClose={handleClose} maxWidth="sm" fullWidth>
                 <DialogTitle>
                     {modalMode === 'crear' ? 'Crear Nuevo Álbum' : 'Editar Álbum'}
@@ -193,7 +226,6 @@ const Albumes = () => {
                 </DialogActions>
             </Dialog>
 
-            {/* MODAL DE CONFIRMACIÓN PARA ELIMINAR */}
             <Dialog open={openDeleteModal} onClose={handleClose}>
                 <DialogTitle>¿Confirmar eliminación?</DialogTitle>
                 <DialogContent>
