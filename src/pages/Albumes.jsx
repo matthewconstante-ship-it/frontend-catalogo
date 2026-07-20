@@ -3,11 +3,14 @@ import {
     Container, Typography, Button, Box, Paper, Table, TableBody, TableCell, 
     TableContainer, TableHead, TableRow, Dialog, DialogTitle, DialogContent, 
     DialogActions, TextField, MenuItem, DialogContentText, InputAdornment,
-    Snackbar, Alert, CircularProgress
+    Snackbar, Alert, CircularProgress, IconButton
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 import Navbar from '../components/Navbar';
-import PageTransition from '../components/PageTransition'; // <-- Animación
+import PageTransition from '../components/PageTransition'; 
 import api from '../services/api'; 
 import './Albumes.css'; 
 
@@ -113,44 +116,91 @@ const Albumes = () => {
     return (
         <PageTransition>
             <Navbar />
-            <Container maxWidth="lg" sx={{ mt: 4 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                    <Typography variant="h4" component="h1">Gestión de Álbumes</Typography>
-                    <Button variant="contained" color="secondary" onClick={() => handleOpen('crear')}>+ Nuevo Álbum</Button>
+            <Container maxWidth="lg" className="albumes-page">
+                {/* Cabecera y Botón Nuevo */}
+                <Box className="albumes-header">
+                    <Typography variant="h4" component="h1" className="albumes-title">
+                        Gestión de Álbumes
+                    </Typography>
+                    <Button 
+                        variant="contained" 
+                        className="btn-nuevo-album"
+                        startIcon={<AddIcon />}
+                        onClick={() => handleOpen('crear')}
+                    >
+                        Nuevo Álbum
+                    </Button>
                 </Box>
 
-                <Box sx={{ mb: 3 }}>
+                {/* Buscador Moderno */}
+                <Box className="search-box">
                     <TextField
-                        fullWidth variant="outlined" placeholder="Buscar por título o artista..."
-                        value={busqueda} onChange={(e) => setBusqueda(e.target.value)}
-                        InputProps={{ startAdornment: (<InputAdornment position="start"><SearchIcon color="action" /></InputAdornment>) }}
+                        fullWidth 
+                        variant="outlined" 
+                        placeholder="Buscar por título o artista..."
+                        value={busqueda} 
+                        onChange={(e) => setBusqueda(e.target.value)}
+                        className="search-input"
+                        InputProps={{ 
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon sx={{ color: '#9ca3af' }} />
+                                </InputAdornment>
+                            ) 
+                        }}
                     />
                 </Box>
 
                 {loading ? (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}><CircularProgress /></Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
+                        <CircularProgress sx={{ color: '#7c3aed' }} />
+                    </Box>
                 ) : (
-                    <TableContainer component={Paper} elevation={3}>
+                    <TableContainer component={Paper} elevation={0} className="custom-table-container">
                         <Table>
-                            <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
+                            <TableHead className="custom-table-head">
                                 <TableRow>
-                                    <TableCell><b>ID</b></TableCell><TableCell><b>Título</b></TableCell>
-                                    <TableCell><b>Lanzamiento</b></TableCell><TableCell><b>Artista</b></TableCell>
-                                    <TableCell align="right"><b>Acciones</b></TableCell>
+                                    <TableCell>ID</TableCell>
+                                    <TableCell>Título</TableCell>
+                                    <TableCell>Lanzamiento</TableCell>
+                                    <TableCell>Artista</TableCell>
+                                    <TableCell align="right">Acciones</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {albumesFiltrados.map((a) => (
-                                    <TableRow key={a.id}>
-                                        <TableCell>{a.id}</TableCell><TableCell>{a.titulo}</TableCell>
-                                        <TableCell>{a.fecha_lanzamiento}</TableCell>
-                                        <TableCell>{getNombreArtista(a.artista)}</TableCell>
-                                        <TableCell align="right">
-                                            <Button size="small" color="info" onClick={() => handleOpen('editar', a)}>Editar</Button>
-                                            <Button size="small" color="error" onClick={() => { setFormData(a); setOpenDeleteModal(true); }}>Eliminar</Button>
+                                    <TableRow key={a.id} className="custom-table-row">
+                                        <TableCell className="custom-table-cell">{a.id}</TableCell>
+                                        <TableCell className="custom-table-cell custom-table-cell-main">{a.titulo}</TableCell>
+                                        <TableCell className="custom-table-cell">{a.fecha_lanzamiento}</TableCell>
+                                        <TableCell className="custom-table-cell">{getNombreArtista(a.artista)}</TableCell>
+                                        <TableCell align="right" className="custom-table-cell">
+                                            <IconButton 
+                                                size="small" 
+                                                onClick={() => handleOpen('editar', a)}
+                                                className="btn-action-edit"
+                                                title="Editar"
+                                            >
+                                                <EditIcon fontSize="small" />
+                                            </IconButton>
+                                            <IconButton 
+                                                size="small" 
+                                                onClick={() => { setFormData(a); setOpenDeleteModal(true); }}
+                                                className="btn-action-delete"
+                                                title="Eliminar"
+                                            >
+                                                <DeleteIcon fontSize="small" />
+                                            </IconButton>
                                         </TableCell>
                                     </TableRow>
                                 ))}
+                                {albumesFiltrados.length === 0 && (
+                                    <TableRow>
+                                        <TableCell colSpan={5} align="center" sx={{ py: 6, color: '#9ca3af' }}>
+                                            No se encontraron álbumes
+                                        </TableCell>
+                                    </TableRow>
+                                )}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -158,22 +208,69 @@ const Albumes = () => {
             </Container>
 
             {/* Modales */}
-            <Dialog open={openModal} onClose={handleClose} maxWidth="sm" fullWidth>
-                <DialogTitle>{modalMode === 'crear' ? 'Crear' : 'Editar'} Álbum</DialogTitle>
+            <Dialog 
+                open={openModal} 
+                onClose={handleClose} 
+                maxWidth="sm" 
+                fullWidth
+                PaperProps={{ className: 'custom-dialog-paper' }}
+            >
+                <DialogTitle className="dialog-title">
+                    {modalMode === 'crear' ? 'Registrar Nuevo Álbum' : 'Editar Álbum'}
+                </DialogTitle>
                 <DialogContent>
-                    <TextField fullWidth margin="dense" label="Título" value={formData.titulo} onChange={(e) => setFormData({...formData, titulo: e.target.value})} />
-                    <TextField fullWidth margin="dense" label="Fecha" type="date" InputLabelProps={{ shrink: true }} value={formData.fecha_lanzamiento} onChange={(e) => setFormData({...formData, fecha_lanzamiento: e.target.value})} />
-                    <TextField select fullWidth margin="dense" label="Artista" value={formData.artista} onChange={(e) => setFormData({...formData, artista: e.target.value})}>
+                    <TextField 
+                        fullWidth 
+                        margin="dense" 
+                        label="Título" 
+                        value={formData.titulo || ''} 
+                        onChange={(e) => setFormData({...formData, titulo: e.target.value})} 
+                        className="dialog-input"
+                        sx={{ mt: 2 }}
+                    />
+                    <TextField 
+                        fullWidth 
+                        margin="dense" 
+                        label="Fecha de Lanzamiento" 
+                        type="date" 
+                        InputLabelProps={{ shrink: true }} 
+                        value={formData.fecha_lanzamiento ? formData.fecha_lanzamiento.split('T')[0] : ''} 
+                        onChange={(e) => setFormData({...formData, fecha_lanzamiento: e.target.value})} 
+                        className="dialog-input"
+                        sx={{ mt: 2 }}
+                    />
+                    <TextField 
+                        select 
+                        fullWidth 
+                        margin="dense" 
+                        label="Artista" 
+                        value={formData.artista || ''} 
+                        onChange={(e) => setFormData({...formData, artista: e.target.value})}
+                        className="dialog-input"
+                        sx={{ mt: 2 }}
+                    >
                         {artistasDisponibles.map((a) => <MenuItem key={a.id} value={a.id}>{a.nombre}</MenuItem>)}
                     </TextField>
                 </DialogContent>
-                <DialogActions><Button onClick={handleClose}>Cancelar</Button><Button onClick={handleSave}>Guardar</Button></DialogActions>
+                <DialogActions sx={{ p: 3 }}>
+                    <Button onClick={handleClose} sx={{ color: '#9ca3af', '&:hover': { color: '#fff' } }}>Cancelar</Button>
+                    <Button onClick={handleSave} variant="contained" className="btn-guardar">Guardar</Button>
+                </DialogActions>
             </Dialog>
 
-            <Dialog open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}>
-                <DialogTitle>¿Confirmar eliminación?</DialogTitle>
-                <DialogContent><DialogContentText>¿Seguro que deseas eliminar este álbum?</DialogContentText></DialogContent>
-                <DialogActions><Button onClick={() => setOpenDeleteModal(false)}>Cancelar</Button><Button color="error" onClick={handleDelete}>Eliminar</Button></DialogActions>
+            <Dialog 
+                open={openDeleteModal} 
+                onClose={() => setOpenDeleteModal(false)}
+                PaperProps={{ className: 'custom-dialog-paper' }}
+            >
+                <DialogTitle className="dialog-title">¿Confirmar eliminación?</DialogTitle>
+                <DialogContent>
+                    <DialogContentText sx={{ color: '#9ca3af' }}>¿Seguro que deseas eliminar este álbum del catálogo?</DialogContentText>
+                </DialogContent>
+                <DialogActions sx={{ p: 3 }}>
+                    <Button onClick={() => setOpenDeleteModal(false)} sx={{ color: '#9ca3af' }}>Cancelar</Button>
+                    <Button variant="contained" onClick={handleDelete} className="btn-eliminar-modal">Eliminar</Button>
+                </DialogActions>
             </Dialog>
 
             <Snackbar open={snackbar.open} autoHideDuration={4000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>

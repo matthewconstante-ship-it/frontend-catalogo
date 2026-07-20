@@ -1,21 +1,25 @@
-/* src/App.css */
 body {
-    background-color: #f8fafc; /* Un gris muy claro que combina con tu theme.js */
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(circle at top, #1a1a2e, #0f0f0f);
+  color: #f3f4f6;
+  font-family: 'Outfit', 'Poppins', sans-serif; /* Actualizado con la nueva fuente */
 }
 
-/* Scrollbar estilizada para un toque extra */
+/* Scrollbar MOD */
 ::-webkit-scrollbar {
-    width: 8px;
+  width: 8px;
 }
+
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+  background: #0f0f0f;
 }
+
 ::-webkit-scrollbar-thumb {
-    background: #c7c7c7;
-    border-radius: 4px;
+  background: linear-gradient(135deg, #7c3aed, #3b82f6);
+  border-radius: 10px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-    background: #6366f1; /* Tu color primario */
+  background: linear-gradient(135deg, #8b5cf6, #2563eb);
 }

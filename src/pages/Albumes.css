@@ -1,26 +1,174 @@
-/* src/pages/Artistas.css y Albumes.css (puedes usar el mismo código en ambos) */
-
-/* Efecto al pasar el cursor sobre las filas de la tabla */
-.MuiTableRow-root:hover {
-    background-color: #f1f5f9 !important;
-    transition: background-color 0.2s ease-in-out;
-    cursor: pointer;
+.albumes-page {
+  margin-top: 2rem;
+  margin-bottom: 3rem;
 }
 
-/* Elevación suave para los contenedores principales */
-.MuiPaper-root {
-    transition: box-shadow 0.3s ease-in-out !important;
+.albumes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
 }
 
-.MuiPaper-root:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+.albumes-title {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 800 !important;
+  color: #fff !important;
 }
 
-/* Mejora estética para los botones dentro de la tabla */
-.MuiButton-root {
-    transition: transform 0.2s ease !important;
+.btn-nuevo-album {
+  background: linear-gradient(135deg, #7c3aed, #3b82f6) !important;
+  border-radius: 30px !important;
+  padding: 10px 24px !important;
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4) !important;
+  text-transform: none !important;
+  font-weight: 600 !important;
 }
 
-.MuiButton-root:hover {
-    transform: translateY(-2px);
+.btn-nuevo-album:hover {
+  background: linear-gradient(135deg, #8b5cf6, #2563eb) !important;
+  box-shadow: 0 6px 25px rgba(124, 58, 237, 0.6) !important;
+}
+
+/* Buscador Moderno */
+.search-box {
+  margin-bottom: 2rem;
+}
+
+.search-input .MuiOutlinedInput-root {
+  border-radius: 30px !important;
+  background: rgba(21, 21, 34, 0.6) !important;
+  backdrop-filter: blur(20px) !important;
+  color: #fff !important;
+}
+
+.search-input .MuiOutlinedInput-notchedOutline {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.search-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(124, 58, 237, 0.5) !important;
+}
+
+.search-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #7c3aed !important;
+  box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
+}
+
+/* Tabla de Álbumes Premium */
+.custom-table-container {
+  border-radius: 24px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(21, 21, 34, 0.6) !important;
+  backdrop-filter: blur(20px) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+.custom-table-head {
+  background-color: rgba(123, 47, 247, 0.1) !important;
+}
+
+.custom-table-head th {
+  color: #00C6FF !important;
+  font-weight: 800 !important;
+}
+
+.custom-table-row {
+  transition: background-color 0.2s ease !important;
+}
+
+.custom-table-row:hover {
+  background-color: rgba(123, 47, 247, 0.12) !important;
+}
+
+.custom-table-cell {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  color: #cbd5e1 !important;
+}
+
+.custom-table-cell-main {
+  color: #fff !important;
+  font-weight: 600 !important;
+}
+
+/* Botones de acción */
+.btn-action-edit {
+  color: #3b82f6 !important;
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  margin-right: 8px !important;
+}
+
+.btn-action-edit:hover {
+  background-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+.btn-action-delete {
+  color: #ec4899 !important;
+  background-color: rgba(236, 72, 153, 0.1) !important;
+}
+
+.btn-action-delete:hover {
+  background-color: rgba(236, 72, 153, 0.2) !important;
+}
+
+/* Modales */
+.custom-dialog-paper {
+  border-radius: 24px !important;
+  background: #1a1a2e !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.dialog-title {
+  color: #fff !important;
+  font-weight: 700 !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.dialog-input .MuiOutlinedInput-root {
+  color: #fff !important;
+}
+
+.dialog-input .MuiInputLabel-root {
+  color: #9ca3af !important;
+}
+
+.dialog-input .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.dialog-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #7c3aed !important;
+}
+
+.dialog-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #7c3aed !important;
+}
+
+/* Estilo para los menús desplegables del select en dark mode */
+.MuiMenu-paper {
+  background-color: #1a1a2e !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.btn-guardar {
+  background: linear-gradient(135deg, #7c3aed, #3b82f6) !important;
+  border-radius: 20px !important;
+  padding: 6px 24px !important;
+  text-transform: none !important;
+}
+
+.btn-guardar:hover {
+  background: linear-gradient(135deg, #8b5cf6, #2563eb) !important;
+}
+
+.btn-eliminar-modal {
+  background-color: #ec4899 !important;
+  border-radius: 20px !important;
+  padding: 6px 24px !important;
+  text-transform: none !important;
+}
+
+.btn-eliminar-modal:hover {
+  background-color: #db2777 !important;
 }
