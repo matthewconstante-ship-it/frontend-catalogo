@@ -1,82 +1,92 @@
+/* Contenedor principal con resplandor sutil */
 .login-page-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 20px;
-  background: radial-gradient(circle at top, #1a1a2e, #0f0f0f);
-  box-sizing: border-box;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% -20%, #1e1a3a 0%, transparent 70%);
+    padding: 16px;
 }
 
+/* Tarjeta principal usando efecto de cristal en lugar de fondo sólido */
 .login-form-container {
-  background: rgba(21, 21, 34, 0.7);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  padding: 3rem;
-  border-radius: 28px;
-  border: 1px solid rgba(124, 58, 237, 0.3);
-  box-shadow: 
-    0 0 50px rgba(124, 58, 237, 0.25),
-    0 15px 35px rgba(0, 0, 0, 0.7);
-  width: 100%;
-  max-width: 400px;
-  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    max-width: 400px;
+    width: 100%;
+    padding: 32px 24px;
+    background-color: rgba(21, 25, 36, 0.6);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
 }
 
+/* Tipografía con degradado */
+/* Tipografía con degradado */
 .login-title {
-  text-align: center;
-  margin-bottom: 2rem !important;
-  font-family: 'Montserrat', sans-serif !important;
-  font-weight: 900 !important;
-  font-size: 2.2rem !important;
-  background: linear-gradient(135deg, #7c3aed, #3b82f6, #ec4899);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: -0.5px;
+    text-align: center;
+    font-weight: 800 !important;
+    margin-bottom: 32px !important;
+    background: linear-gradient(to right, #8B5CF6, #3B82F6);
+    
+    /* Prefijos de WebKit */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    /* Propiedades estándar (¡esto quita el warning!) */
+    background-clip: text;
+    color: transparent;
 }
 
-/* Estilo para los campos de texto dentro del login */
-.login-form-container input,
-.login-form-container .MuiOutlinedInput-root {
-  background: rgba(255, 255, 255, 0.03) !important;
-  border-radius: 16px !important;
-  color: #fff !important;
-  transition: all 0.3s ease !important;
+/* Estilo para mensajes de error suavizados */
+.login-alert {
+    margin-bottom: 24px !important;
+    border-radius: 8px !important;
+    background-color: rgba(211, 47, 47, 0.1) !important;
+    color: #ffb4ab !important;
 }
 
-.login-form-container input:focus,
-.login-form-container .MuiOutlinedInput-root.Mui-focused {
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.4) !important;
-  border-color: #7c3aed !important;
+/* --- OVERRIDES DE MATERIAL UI PARA TEXTFIELDS --- */
+.custom-mui-input {
+    width: 100%;
 }
 
+.margin-bottom-normal {
+    margin-bottom: 16px !important;
+}
+
+.margin-bottom-large {
+    margin-bottom: 32px !important;
+}
+
+.custom-mui-input .MuiOutlinedInput-root {
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+/* Quitamos el borde por defecto */
+.custom-mui-input .MuiOutlinedInput-notchedOutline {
+    border: none;
+}
+
+/* Borde al pasar el ratón */
+.custom-mui-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border: 1px solid rgba(139, 92, 246, 0.4);
+}
+
+/* Borde al enfocar (escribir) */
+.custom-mui-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border: 1px solid #8B5CF6;
+}
+
+.custom-input-icon {
+    color: #9CA3AF;
+}
+
+/* Botón principal */
 .login-button {
-  margin-top: 2rem !important;
-  padding: 14px !important;
-  width: 100% !important;
-  background: linear-gradient(135deg, #7c3aed, #3b82f6) !important;
-  border-radius: 30px !important;
-  font-weight: 600 !important;
-  text-transform: none !important;
-  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4) !important;
-  transition: all 0.3s ease !important;
-}
-
-.login-button:hover {
-  background: linear-gradient(135deg, #8b5cf6, #2563eb) !important;
-  box-shadow: 0 6px 25px rgba(124, 58, 237, 0.6) !important;
-  transform: translateY(-2px) !important;
-}
-
-/* Animación de entrada elegante tipo startup */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+    padding: 12px 0 !important;
+    font-size: 1rem !important;
+    letter-spacing: 0.5px !important;
+    border-radius: 8px !important;
 }

@@ -3,19 +3,20 @@ import {
     Container, Typography, Button, Box, Paper, Table, TableBody, TableCell, 
     TableContainer, TableHead, TableRow, Dialog, DialogTitle, DialogContent, 
     DialogActions, TextField, InputAdornment, 
-    Snackbar, Alert, CircularProgress, IconButton
+    Snackbar, Alert, IconButton, Skeleton // <-- Añadido Skeleton aquí
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AddIcon from '@mui/icons-material/Add';
+import LibraryMusicOutlinedIcon from '@mui/icons-material/LibraryMusicOutlined';
+
 import Navbar from '../components/Navbar';
 import PageTransition from '../components/PageTransition'; 
 import api from '../services/api'; 
 import './Artistas.css'; 
 
 const Artistas = () => {
-    // 1. Estados
     const [artistas, setArtistas] = useState([]);
     const [busqueda, setBusqueda] = useState(''); 
     const [loading, setLoading] = useState(true);
@@ -25,7 +26,6 @@ const Artistas = () => {
     const [formData, setFormData] = useState({ id: null, nombre: '', genero: '', biografia: '' });
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-    // 2. Carga de datos
     useEffect(() => {
         const fetchArtistas = async () => {
             setLoading(true);
@@ -43,7 +43,6 @@ const Artistas = () => {
         fetchArtistas();
     }, []);
 
-    // 3. Funciones de control
     const handleOpen = (modo, artista = null) => {
         setModalMode(modo);
         setFormData(modo === 'editar' && artista ? artista : { id: null, nombre: '', genero: '', biografia: '' });
@@ -60,7 +59,6 @@ const Artistas = () => {
         setSnackbar({ ...snackbar, open: false });
     };
 
-    // 4. Acciones CRUD
     const handleSave = async () => {
         try {
             if (modalMode === 'crear') {
@@ -91,7 +89,6 @@ const Artistas = () => {
         }
     };
 
-    // 5. Lógica de filtro
     const artistasFiltrados = artistas.filter((a) => 
         (a.nombre && a.nombre.toLowerCase().includes(busqueda.toLowerCase())) || 
         (a.genero && a.genero.toLowerCase().includes(busqueda.toLowerCase())) ||
@@ -102,7 +99,6 @@ const Artistas = () => {
         <PageTransition>
             <Navbar />
             <Container maxWidth="lg" className="artistas-page">
-                {/* Cabecera y Botón Nuevo */}
                 <Box className="artistas-header">
                     <Typography variant="h4" component="h1" className="artistas-title">
                         Gestión de Artistas
@@ -117,50 +113,59 @@ const Artistas = () => {
                     </Button>
                 </Box>
 
-                {/* Buscador Moderno */}
                 <Box className="search-box">
                     <TextField
+                        className="custom-search-input"
                         fullWidth 
                         variant="outlined" 
                         placeholder="Buscar por nombre, género o biografía..."
                         value={busqueda} 
                         onChange={(e) => setBusqueda(e.target.value)}
-                        className="search-input"
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <SearchIcon sx={{ color: '#9ca3af' }} />
+                                    <SearchIcon className="search-icon" />
                                 </InputAdornment>
                             ),
                         }}
                     />
                 </Box>
 
-                {/* Tabla de Artistas */}
-                {loading ? (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
-                        <CircularProgress sx={{ color: '#7c3aed' }} />
-                    </Box>
-                ) : (
-                    <TableContainer component={Paper} elevation={0} className="custom-table-container">
-                        <Table>
-                            <TableHead className="custom-table-head">
-                                <TableRow>
-                                    <TableCell>ID</TableCell>
-                                    <TableCell>Nombre</TableCell>
-                                    <TableCell>Género</TableCell>
-                                    <TableCell>Biografía</TableCell>
-                                    <TableCell align="right">Acciones</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {artistasFiltrados.map((a) => (
+                {/* TABLA PREMIUM CON SKELETONS DE CARGA */}
+                <TableContainer component={Paper} elevation={0} className="custom-table-container">
+                    <Table>
+                        <TableHead className="custom-table-head">
+                            <TableRow>
+                                <TableCell>ID</TableCell>
+                                <TableCell>Nombre</TableCell>
+                                <TableCell>Género</TableCell>
+                                <TableCell>Biografía</TableCell>
+                                <TableCell align="right">Acciones</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {loading ? (
+                                // Renderizamos 4 filas falsas (Skeletons) mientras carga
+                                [1, 2, 3, 4].map((item) => (
+                                    <TableRow key={item} className="custom-table-row">
+                                        <TableCell className="custom-table-cell"><Skeleton variant="text" width={30} /></TableCell>
+                                        <TableCell className="custom-table-cell"><Skeleton variant="text" width={120} /></TableCell>
+                                        <TableCell className="custom-table-cell"><Skeleton variant="text" width={90} /></TableCell>
+                                        <TableCell className="custom-table-cell"><Skeleton variant="text" width={200} /></TableCell>
+                                        <TableCell align="right" className="custom-table-cell">
+                                            <Skeleton variant="circular" width={30} height={30} sx={{ display: 'inline-block', mr: 1, bgcolor: 'rgba(255,255,255,0.08)' }} />
+                                            <Skeleton variant="circular" width={30} height={30} sx={{ display: 'inline-block', bgcolor: 'rgba(255,255,255,0.08)' }} />
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                artistasFiltrados.map((a) => (
                                     <TableRow key={a.id} className="custom-table-row">
-                                        <TableCell className="custom-table-cell">{a.id}</TableCell>
-                                        <TableCell className="custom-table-cell custom-table-cell-main">{a.nombre}</TableCell>
+                                        <TableCell className="custom-table-cell cell-id">{a.id}</TableCell>
+                                        <TableCell className="custom-table-cell cell-main">{a.nombre}</TableCell>
                                         <TableCell className="custom-table-cell">{a.genero}</TableCell>
-                                        <TableCell className="custom-table-cell" sx={{ maxWidth: '250px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                            {a.biografia || <span style={{ color: '#6b7280', fontStyle: 'italic' }}>Sin biografía</span>}
+                                        <TableCell className="custom-table-cell bio-cell">
+                                            {a.biografia || <span className="empty-text">Sin biografía</span>}
                                         </TableCell>
                                         <TableCell align="right" className="custom-table-cell">
                                             <IconButton 
@@ -169,7 +174,7 @@ const Artistas = () => {
                                                 className="btn-action-edit"
                                                 title="Editar"
                                             >
-                                                <EditIcon fontSize="small" />
+                                                <EditOutlinedIcon fontSize="small" />
                                             </IconButton>
                                             <IconButton 
                                                 size="small" 
@@ -177,89 +182,60 @@ const Artistas = () => {
                                                 className="btn-action-delete"
                                                 title="Eliminar"
                                             >
-                                                <DeleteIcon fontSize="small" />
+                                                <DeleteOutlinedIcon fontSize="small" />
                                             </IconButton>
                                         </TableCell>
                                     </TableRow>
-                                ))}
-                                {artistasFiltrados.length === 0 && (
-                                    <TableRow>
-                                        <TableCell colSpan={5} align="center" sx={{ py: 6, color: '#9ca3af' }}>
-                                            No se encontraron artistas
-                                        </TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                )}
+                                ))
+                            )}
+                            
+                            {!loading && artistasFiltrados.length === 0 && (
+                                <TableRow>
+                                    <TableCell colSpan={5} align="center" className="empty-state-cell">
+                                        <Box className="empty-state-container">
+                                            <LibraryMusicOutlinedIcon className="empty-state-icon" />
+                                            <Typography variant="h6" className="empty-state-title">
+                                                No hay artistas a la vista
+                                            </Typography>
+                                            <Typography variant="body2" className="empty-state-subtitle">
+                                                Intenta con otra búsqueda o agrega un nuevo artista al catálogo.
+                                            </Typography>
+                                        </Box>
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </Container>
 
-            {/* Modales y Notificaciones */}
-            <Dialog 
-                open={openModal} 
-                onClose={handleClose} 
-                maxWidth="sm" 
-                fullWidth 
-                PaperProps={{ className: 'custom-dialog-paper' }}
-            >
-                <DialogTitle className="dialog-title">
-                    {modalMode === 'crear' ? 'Registrar Nuevo Artista' : 'Editar Artista'}
-                </DialogTitle>
+            {/* MODALES Y SNACKBAR (Sin cambios, idénticos a los que ya tienes) */}
+            <Dialog open={openModal} onClose={handleClose} maxWidth="sm" fullWidth PaperProps={{ className: 'custom-dialog-paper' }}>
+                <DialogTitle className="dialog-title">{modalMode === 'crear' ? 'Registrar Nuevo Artista' : 'Editar Artista'}</DialogTitle>
                 <DialogContent>
-                    <TextField 
-                        fullWidth 
-                        margin="dense" 
-                        label="Nombre" 
-                        value={formData.nombre || ''} 
-                        onChange={(e) => setFormData({...formData, nombre: e.target.value})} 
-                        className="dialog-input"
-                        sx={{ mt: 2 }}
-                    />
-                    <TextField 
-                        fullWidth 
-                        margin="dense" 
-                        label="Género" 
-                        value={formData.genero || ''} 
-                        onChange={(e) => setFormData({...formData, genero: e.target.value})} 
-                        className="dialog-input"
-                        sx={{ mt: 2 }}
-                    />
-                    <TextField 
-                        fullWidth 
-                        margin="dense" 
-                        label="Biografía" 
-                        multiline
-                        rows={3}
-                        value={formData.biografia || ''} 
-                        onChange={(e) => setFormData({...formData, biografia: e.target.value})} 
-                        className="dialog-input"
-                        sx={{ mt: 2 }}
-                    />
+                    <TextField className="custom-dialog-input" fullWidth margin="dense" label="Nombre" value={formData.nombre || ''} onChange={(e) => setFormData({...formData, nombre: e.target.value})} />
+                    <TextField className="custom-dialog-input" fullWidth margin="dense" label="Género" value={formData.genero || ''} onChange={(e) => setFormData({...formData, genero: e.target.value})} />
+                    <TextField className="custom-dialog-input" fullWidth margin="dense" label="Biografía" multiline rows={3} value={formData.biografia || ''} onChange={(e) => setFormData({...formData, biografia: e.target.value})} />
                 </DialogContent>
-                <DialogActions sx={{ p: 3 }}>
-                    <Button onClick={handleClose} sx={{ color: '#9ca3af', '&:hover': { color: '#fff' } }}>Cancelar</Button>
+                <DialogActions className="dialog-actions">
+                    <Button onClick={handleClose} className="btn-cancelar">Cancelar</Button>
                     <Button onClick={handleSave} variant="contained" className="btn-guardar">Guardar</Button>
                 </DialogActions>
             </Dialog>
 
-            <Dialog 
-                open={openDeleteModal} 
-                onClose={() => setOpenDeleteModal(false)} 
-                PaperProps={{ className: 'custom-dialog-paper' }}
-            >
-                <DialogTitle className="dialog-title">¿Confirmar eliminación?</DialogTitle>
+            <Dialog open={openDeleteModal} onClose={() => setOpenDeleteModal(false)} PaperProps={{ className: 'custom-dialog-paper' }}>
+                <DialogTitle className="dialog-title text-danger">Confirmar eliminación</DialogTitle>
                 <DialogContent>
-                    <Typography sx={{ color: '#9ca3af' }}>¿Seguro que deseas eliminar este artista del catálogo?</Typography>
+                    <Typography className="dialog-text">¿Seguro que deseas eliminar a <strong>{formData.nombre}</strong> del catálogo?</Typography>
                 </DialogContent>
-                <DialogActions sx={{ p: 3 }}>
-                    <Button onClick={() => setOpenDeleteModal(false)} sx={{ color: '#9ca3af' }}>Cancelar</Button>
+                <DialogActions className="dialog-actions">
+                    <Button onClick={() => setOpenDeleteModal(false)} className="btn-cancelar">Cancelar</Button>
                     <Button variant="contained" onClick={handleDelete} className="btn-eliminar-modal">Eliminar</Button>
                 </DialogActions>
             </Dialog>
 
             <Snackbar open={snackbar.open} autoHideDuration={4000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} variant="filled">{snackbar.message}</Alert>
+                <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} variant="filled" className="custom-alert">{snackbar.message}</Alert>
             </Snackbar>
         </PageTransition>
     );

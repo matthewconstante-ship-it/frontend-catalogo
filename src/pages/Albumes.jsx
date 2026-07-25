@@ -2,20 +2,21 @@ import { useState, useEffect } from 'react';
 import { 
     Container, Typography, Button, Box, Paper, Table, TableBody, TableCell, 
     TableContainer, TableHead, TableRow, Dialog, DialogTitle, DialogContent, 
-    DialogActions, TextField, MenuItem, DialogContentText, InputAdornment,
+    DialogActions, TextField, MenuItem, InputAdornment,
     Snackbar, Alert, CircularProgress, IconButton
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AddIcon from '@mui/icons-material/Add';
+import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
+
 import Navbar from '../components/Navbar';
 import PageTransition from '../components/PageTransition'; 
 import api from '../services/api'; 
 import './Albumes.css'; 
 
 const Albumes = () => {
-    // 1. Estados
     const [albumes, setAlbumes] = useState([]);
     const [artistasDisponibles, setArtistasDisponibles] = useState([]);
     const [busqueda, setBusqueda] = useState('');
@@ -27,7 +28,6 @@ const Albumes = () => {
     const [formData, setFormData] = useState({ id: null, titulo: '', fecha_lanzamiento: '', artista: '' });
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-    // 2. Carga de datos
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
@@ -53,7 +53,6 @@ const Albumes = () => {
         fetchData();
     }, []);
 
-    // 3. Funciones de control
     const handleOpen = (modo, album = null) => {
         setModalMode(modo);
         setFormData(modo === 'editar' && album ? album : { id: null, titulo: '', fecha_lanzamiento: '', artista: '' });
@@ -70,7 +69,6 @@ const Albumes = () => {
         setSnackbar({ ...snackbar, open: false });
     };
 
-    // 4. Acciones CRUD
     const handleSave = async () => {
         try {
             if (modalMode === 'crear') {
@@ -106,7 +104,6 @@ const Albumes = () => {
         return artista ? artista.nombre : 'Desconocido';
     };
 
-    // 5. Lógica de filtro
     const albumesFiltrados = albumes.filter((album) => {
         const termino = busqueda.toLowerCase();
         const nombreDelArtista = getNombreArtista(album.artista).toLowerCase();
@@ -117,7 +114,6 @@ const Albumes = () => {
         <PageTransition>
             <Navbar />
             <Container maxWidth="lg" className="albumes-page">
-                {/* Cabecera y Botón Nuevo */}
                 <Box className="albumes-header">
                     <Typography variant="h4" component="h1" className="albumes-title">
                         Gestión de Álbumes
@@ -132,19 +128,18 @@ const Albumes = () => {
                     </Button>
                 </Box>
 
-                {/* Buscador Moderno */}
                 <Box className="search-box">
                     <TextField
+                        className="custom-search-input"
                         fullWidth 
                         variant="outlined" 
                         placeholder="Buscar por título o artista..."
                         value={busqueda} 
                         onChange={(e) => setBusqueda(e.target.value)}
-                        className="search-input"
                         InputProps={{ 
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <SearchIcon sx={{ color: '#9ca3af' }} />
+                                    <SearchIcon className="search-icon" />
                                 </InputAdornment>
                             ) 
                         }}
@@ -152,8 +147,8 @@ const Albumes = () => {
                 </Box>
 
                 {loading ? (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
-                        <CircularProgress sx={{ color: '#7c3aed' }} />
+                    <Box className="loading-container">
+                        <CircularProgress className="loading-spinner" />
                     </Box>
                 ) : (
                     <TableContainer component={Paper} elevation={0} className="custom-table-container">
@@ -170,8 +165,8 @@ const Albumes = () => {
                             <TableBody>
                                 {albumesFiltrados.map((a) => (
                                     <TableRow key={a.id} className="custom-table-row">
-                                        <TableCell className="custom-table-cell">{a.id}</TableCell>
-                                        <TableCell className="custom-table-cell custom-table-cell-main">{a.titulo}</TableCell>
+                                        <TableCell className="custom-table-cell cell-id">{a.id}</TableCell>
+                                        <TableCell className="custom-table-cell cell-main">{a.titulo}</TableCell>
                                         <TableCell className="custom-table-cell">{a.fecha_lanzamiento}</TableCell>
                                         <TableCell className="custom-table-cell">{getNombreArtista(a.artista)}</TableCell>
                                         <TableCell align="right" className="custom-table-cell">
@@ -181,7 +176,7 @@ const Albumes = () => {
                                                 className="btn-action-edit"
                                                 title="Editar"
                                             >
-                                                <EditIcon fontSize="small" />
+                                                <EditOutlinedIcon fontSize="small" />
                                             </IconButton>
                                             <IconButton 
                                                 size="small" 
@@ -189,15 +184,25 @@ const Albumes = () => {
                                                 className="btn-action-delete"
                                                 title="Eliminar"
                                             >
-                                                <DeleteIcon fontSize="small" />
+                                                <DeleteOutlinedIcon fontSize="small" />
                                             </IconButton>
                                         </TableCell>
                                     </TableRow>
                                 ))}
+
+                                {/* ESTADO VACÍO (EMPTY STATE) */}
                                 {albumesFiltrados.length === 0 && (
                                     <TableRow>
-                                        <TableCell colSpan={5} align="center" sx={{ py: 6, color: '#9ca3af' }}>
-                                            No se encontraron álbumes
+                                        <TableCell colSpan={5} align="center" className="empty-state-cell">
+                                            <Box className="empty-state-container">
+                                                <AlbumOutlinedIcon className="empty-state-icon" />
+                                                <Typography variant="h6" className="empty-state-title">
+                                                    No hay álbumes a la vista
+                                                </Typography>
+                                                <Typography variant="body2" className="empty-state-subtitle">
+                                                    Intenta con otra búsqueda o agrega un nuevo álbum al catálogo.
+                                                </Typography>
+                                            </Box>
                                         </TableCell>
                                     </TableRow>
                                 )}
@@ -207,7 +212,7 @@ const Albumes = () => {
                 )}
             </Container>
 
-            {/* Modales */}
+            {/* MODAL CREAR / EDITAR */}
             <Dialog 
                 open={openModal} 
                 onClose={handleClose} 
@@ -220,15 +225,15 @@ const Albumes = () => {
                 </DialogTitle>
                 <DialogContent>
                     <TextField 
+                        className="custom-dialog-input"
                         fullWidth 
                         margin="dense" 
                         label="Título" 
                         value={formData.titulo || ''} 
                         onChange={(e) => setFormData({...formData, titulo: e.target.value})} 
-                        className="dialog-input"
-                        sx={{ mt: 2 }}
                     />
                     <TextField 
+                        className="custom-dialog-input"
                         fullWidth 
                         margin="dense" 
                         label="Fecha de Lanzamiento" 
@@ -236,45 +241,48 @@ const Albumes = () => {
                         InputLabelProps={{ shrink: true }} 
                         value={formData.fecha_lanzamiento ? formData.fecha_lanzamiento.split('T')[0] : ''} 
                         onChange={(e) => setFormData({...formData, fecha_lanzamiento: e.target.value})} 
-                        className="dialog-input"
-                        sx={{ mt: 2 }}
                     />
                     <TextField 
                         select 
+                        className="custom-dialog-input"
                         fullWidth 
                         margin="dense" 
                         label="Artista" 
                         value={formData.artista || ''} 
                         onChange={(e) => setFormData({...formData, artista: e.target.value})}
-                        className="dialog-input"
-                        sx={{ mt: 2 }}
                     >
                         {artistasDisponibles.map((a) => <MenuItem key={a.id} value={a.id}>{a.nombre}</MenuItem>)}
                     </TextField>
                 </DialogContent>
-                <DialogActions sx={{ p: 3 }}>
-                    <Button onClick={handleClose} sx={{ color: '#9ca3af', '&:hover': { color: '#fff' } }}>Cancelar</Button>
+                <DialogActions className="dialog-actions">
+                    <Button onClick={handleClose} className="btn-cancelar">Cancelar</Button>
                     <Button onClick={handleSave} variant="contained" className="btn-guardar">Guardar</Button>
                 </DialogActions>
             </Dialog>
 
+            {/* MODAL ELIMINAR */}
             <Dialog 
                 open={openDeleteModal} 
                 onClose={() => setOpenDeleteModal(false)}
                 PaperProps={{ className: 'custom-dialog-paper' }}
             >
-                <DialogTitle className="dialog-title">¿Confirmar eliminación?</DialogTitle>
+                <DialogTitle className="dialog-title text-danger">Confirmar eliminación</DialogTitle>
                 <DialogContent>
-                    <DialogContentText sx={{ color: '#9ca3af' }}>¿Seguro que deseas eliminar este álbum del catálogo?</DialogContentText>
+                    <Typography className="dialog-text">
+                        ¿Seguro que deseas eliminar el álbum <strong>{formData.titulo}</strong> del catálogo? Esta acción no se puede deshacer.
+                    </Typography>
                 </DialogContent>
-                <DialogActions sx={{ p: 3 }}>
-                    <Button onClick={() => setOpenDeleteModal(false)} sx={{ color: '#9ca3af' }}>Cancelar</Button>
+                <DialogActions className="dialog-actions">
+                    <Button onClick={() => setOpenDeleteModal(false)} className="btn-cancelar">Cancelar</Button>
                     <Button variant="contained" onClick={handleDelete} className="btn-eliminar-modal">Eliminar</Button>
                 </DialogActions>
             </Dialog>
 
+            {/* SNACKBAR */}
             <Snackbar open={snackbar.open} autoHideDuration={4000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} variant="filled">{snackbar.message}</Alert>
+                <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} variant="filled" className="custom-alert">
+                    {snackbar.message}
+                </Alert>
             </Snackbar>
         </PageTransition>
     );

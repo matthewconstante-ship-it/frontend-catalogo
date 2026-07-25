@@ -1,39 +1,90 @@
-.MuiAppBar-root {
-  background: rgba(15, 15, 26, 0.85) !important;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+.navbar-glass {
+    background-color: rgba(21, 25, 36, 0.7) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    top: 0;
+    z-index: 1100;
 }
 
-.nav-link-custom {
-  position: relative;
-  font-family: 'Poppins', sans-serif !important;
-  font-weight: 500 !important;
-  color: #9ca3af !important;
-  text-transform: none !important;
-  transition: color 0.3s ease !important;
+.navbar-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px !important;
+    min-height: 72px !important;
+    position: relative;
 }
 
-.nav-link-custom:hover, 
-.nav-link-custom.active {
-  color: #ffffff !important;
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.nav-link-custom::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: 4px;
-  left: 50%;
-  background: linear-gradient(90deg, #7c3aed, #3b82f6);
-  transition: all 0.3s ease;
-  transform: translateX(-50%);
-  border-radius: 2px;
+.navbar-logo-icon {
+    color: #8B5CF6;
+    font-size: 28px !important;
 }
 
-.nav-link-custom:hover::after, 
-.nav-link-custom.active::after {
-  width: 70%;
+.navbar-title {
+    font-weight: 800 !important;
+    background: linear-gradient(to right, #8B5CF6, #3B82F6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: 0.5px;
+    margin: 0 !important;
+}
+
+/* Enlaces perfectamente centrados */
+.navbar-links {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.nav-item {
+    text-decoration: none;
+    color: #9CA3AF;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+    color: #F3F4F6;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nav-item.active {
+    color: #F3F4F6;
+    background-color: rgba(139, 92, 246, 0.15);
+}
+
+/* Botón de cerrar sesión limpio, a la derecha y sin estirarse */
+.logout-button {
+    text-transform: none !important;
+    border: 1px solid rgba(244, 63, 94, 0.3) !important;
+    color: #f43f5e !important;
+    font-weight: 600 !important;
+    border-radius: 20px !important;
+    padding: 6px 20px !important;
+    background-color: transparent !important;
+    width: auto !important;
+    min-width: unset !important;
+    margin-left: auto;
+    transition: all 0.2s ease !important;
+}
+
+.logout-button:hover {
+    background-color: rgba(244, 63, 94, 0.1) !important;
+    border-color: #f43f5e !important;
 }

@@ -1,17 +1,18 @@
-// src/main.jsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
-import './index.css'; // Tu CSS global se mantiene intacto aquí
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { theme } from './theme'; // Importamos el tema que creamos
+import App from './App.jsx';
+import './index.css';
+
+// Importaciones de Material UI
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import theme from './theme.js';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <CssBaseline /> {/* Esto resetea estilos básicos de forma profesional */}
+      {/* CssBaseline resetea los estilos por defecto del navegador e inyecta el background oscuro */}
+      <CssBaseline />
       <App />
     </ThemeProvider>
-  </React.StrictMode>
-);
+  </React.StrictMode>,
+)

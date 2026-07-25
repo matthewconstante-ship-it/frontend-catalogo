@@ -13,7 +13,11 @@
 .artistas-title {
   font-family: 'Montserrat', sans-serif !important;
   font-weight: 800 !important;
-  color: #fff !important;
+  background: linear-gradient(to right, #a855f7, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
 }
 
 .btn-nuevo-artista {
@@ -30,38 +34,55 @@
   box-shadow: 0 6px 25px rgba(124, 58, 237, 0.6) !important;
 }
 
-/* Buscador con Glassmorphism y Glow */
+/* Buscador Moderno */
 .search-box {
   margin-bottom: 2rem;
 }
 
-.search-input .MuiOutlinedInput-root {
+.custom-search-input .MuiOutlinedInput-root {
   border-radius: 30px !important;
   background: rgba(21, 21, 34, 0.6) !important;
   backdrop-filter: blur(20px) !important;
   color: #fff !important;
 }
 
-.search-input .MuiOutlinedInput-notchedOutline {
+.custom-search-input .MuiOutlinedInput-notchedOutline {
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
-.search-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+.custom-search-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
   border-color: rgba(124, 58, 237, 0.5) !important;
 }
 
-.search-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+.custom-search-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
   border-color: #7c3aed !important;
   box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
 }
 
+.search-icon {
+  color: #9ca3af;
+}
+
+/* Estado de carga */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 4rem;
+}
+
+.loading-spinner {
+  color: #7c3aed !important;
+}
+
 /* Tabla de Artistas Premium */
 .custom-table-container {
-  border-radius: 24px !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  background: rgba(21, 21, 34, 0.6) !important;
-  backdrop-filter: blur(20px) !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+    background-color: rgba(21, 25, 36, 0.5) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+    overflow: hidden !important;
 }
 
 .custom-table-head {
@@ -86,9 +107,19 @@
   color: #cbd5e1 !important;
 }
 
-.custom-table-cell-main {
+.cell-id {
+  color: #9ca3af !important;
+  font-family: monospace;
+}
+
+.cell-main {
   color: #fff !important;
   font-weight: 600 !important;
+}
+
+.empty-text {
+  color: #6b7280;
+  font-style: italic;
 }
 
 /* Botones de acción */
@@ -111,6 +142,36 @@
   background-color: rgba(236, 72, 153, 0.2) !important;
 }
 
+/* Estado Vacío (Empty State) */
+.empty-state-cell {
+  border-bottom: none !important;
+  padding: 4rem 1rem !important;
+}
+
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+}
+
+.empty-state-icon {
+  font-size: 56px !important;
+  color: #9ca3af;
+  margin-bottom: 12px;
+}
+
+.empty-state-title {
+  color: #fff !important;
+  font-weight: 700 !important;
+  margin-bottom: 4px !important;
+}
+
+.empty-state-subtitle {
+  color: #9ca3af !important;
+}
+
 /* Modales */
 .custom-dialog-paper {
   border-radius: 24px !important;
@@ -124,24 +185,51 @@
   font-family: 'Montserrat', sans-serif !important;
 }
 
-.dialog-input .MuiOutlinedInput-root {
-  color: #fff !important;
+.text-danger {
+  color: #ec4899 !important;
 }
 
-.dialog-input .MuiInputLabel-root {
+.dialog-text {
   color: #9ca3af !important;
 }
 
-.dialog-input .MuiOutlinedInput-notchedOutline {
+.custom-dialog-input {
+  margin-top: 1rem !important;
+}
+
+.custom-dialog-input .MuiOutlinedInput-root {
+  color: #fff !important;
+  background: rgba(21, 21, 34, 0.4) !important;
+}
+
+.custom-dialog-input .MuiInputLabel-root {
+  color: #9ca3af !important;
+}
+
+.custom-dialog-input .MuiOutlinedInput-notchedOutline {
   border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
-.dialog-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+.custom-dialog-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
   border-color: #7c3aed !important;
 }
 
-.dialog-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+.custom-dialog-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
   border-color: #7c3aed !important;
+}
+
+.dialog-actions {
+  padding: 1.5rem !important;
+}
+
+.btn-cancelar {
+  color: #9ca3af !important;
+  text-transform: none !important;
+}
+
+.btn-cancelar:hover {
+  color: #fff !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
 }
 
 .btn-guardar {
@@ -164,4 +252,12 @@
 
 .btn-eliminar-modal:hover {
   background-color: #db2777 !important;
+}
+
+.custom-alert {
+  border-radius: 12px !important;
+}
+/* Estilo para los Skeletons de carga */
+.MuiSkeleton-root {
+  background-color: rgba(255, 255, 255, 0.08) !important;
 }
