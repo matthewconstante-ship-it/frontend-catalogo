@@ -241,9 +241,47 @@ body.light-mode .radio-control-btn {
   color: #475569;
 }
 
-/* Ocultar suavemente en pantallas pequeñas para no tapar contenido */
-@media (max-width: 1280px) {
+/* =========================================
+   COMPORTAMIENTO RESPONSIVO (WIDGET FLOTANTE)
+   ========================================= */
+@media (max-width: 1300px) {
   .radio-sidebar-container {
-    display: none;
+    /* Quitamos la posición de la izquierda/arriba y la mandamos abajo a la derecha */
+    top: auto;
+    bottom: 24px;
+    left: auto;
+    right: 24px;
+    animation: fade-in-radio-mobile 0.6s ease-out forwards;
   }
+  
+  .radio-card {
+    transform: scale(0.85); /* Reducimos el tamaño al 85% */
+    transform-origin: bottom right;
+  }
+  
+  .radio-card:hover {
+    transform: scale(0.85) translateY(-6px);
+  }
+}
+
+/* Ajuste extra para pantallas de teléfonos (Móviles) */
+@media (max-width: 768px) {
+  .radio-sidebar-container {
+    bottom: 16px;
+    right: 16px;
+  }
+  
+  .radio-card {
+    transform: scale(0.75); /* Reducimos el tamaño al 75% */
+  }
+
+  .radio-card:hover {
+    transform: scale(0.75) translateY(-6px);
+  }
+}
+
+/* Nueva animación para que en móviles entre desde la derecha y no desde la izquierda */
+@keyframes fade-in-radio-mobile {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
 }

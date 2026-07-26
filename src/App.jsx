@@ -3,15 +3,7 @@ import Login from './pages/Login';
 import Artistas from './pages/Artistas';
 import Albumes from './pages/Albumes';
 import Navbar from './components/Navbar';
-
-// Guardián de rutas protegidas
-const ProtectedRoute = ({ children }) => {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-        return <Navigate to="/login" replace />;
-    }
-    return children;
-};
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Layout principal que mantiene la Navbar fija sin parpadeos
 const AppLayout = () => {

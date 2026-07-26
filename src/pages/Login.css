@@ -8,35 +8,36 @@
     padding: 1rem;
 }
 
-/* Tarjeta principal */
+/* Tarjeta principal (Escalada para pantallas grandes) */
 .login-form-container {
-    max-width: 400px; 
+    max-width: 700px; 
     width: 100%;
     margin: 0 auto;
-    padding: 70px 32px 32px 32px; 
+    padding: 100px 58px 58px 58px; /* Más espacio interno para respirar */
     background-color: rgba(21, 25, 36, 0.6);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-    border-radius: 12px;
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4); /* Sombra un poco más profunda */
+    border-radius: 16px; /* Bordes ligeramente más redondeados */
     position: relative; 
 }
 
-/* --- ESTILOS DE LA MASCOTA PATO PREMIUM --- */
+/* --- ESTILOS DE LA MASCOTA (Escalada proporcionalmente) --- */
 .mascot-container {
-    width: 110px;
-    height: 110px;
+    width: 160px; /* Aumentado de 110px a 160px */
+    height: 160px; /* Aumentado de 110px a 160px */
     position: absolute;
-    top: -55px; 
+    top: -80px; /* La mitad del height exacto para centrarla en el borde */
     left: 50%;
     transform: translateX(-50%); 
     border-radius: 50%;
     background-color: #1a1a2e; 
-    border: 2px solid rgba(139, 92, 246, 0.3);
+    border: 3px solid rgba(139, 92, 246, 0.3); /* Borde un poco más grueso */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
     overflow: hidden; 
     z-index: 10;
+    transition: all 0.3s ease;
 }
 
 .mascot-svg {
@@ -48,26 +49,26 @@
     transition: d 0.3s ease;
 }
 
-/* Animaciones de las alas */
+/* Animaciones de los brazos/manos */
 .hands {
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hands.down {
-    transform: translateY(30px); /* Alas descansando abajo */
+    transform: translateY(30px); 
 }
 
 .hands.covering {
-    transform: translateY(-50px); /* Alas arriba tapando los ojos */
+    transform: translateY(-50px); 
 }
 
-/* Pato espiando la contraseña */
+/* Mascota espiando la contraseña */
 .hands.peeking .hand-left {
-    transform: translateY(-50px); /* Ala izquierda se queda arriba */
+    transform: translateY(-50px); 
 }
 
 .hands.peeking .hand-right {
-    transform: translateY(-25px) translateX(15px); /* Ala derecha baja y se aparta */
+    transform: translateY(-25px) translateX(15px); 
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -76,7 +77,8 @@
     text-align: center;
     font-family: 'Montserrat', sans-serif !important;
     font-weight: 800 !important;
-    margin-bottom: 24px !important;
+    font-size: 2.6rem !important; /* Título más grande y dominante */
+    margin-bottom: 32px !important;
     background: linear-gradient(to right, #a855f7, #3b82f6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -94,16 +96,22 @@
 .btn-guardar {
     background: linear-gradient(135deg, #7c3aed, #3b82f6) !important;
     border-radius: 20px !important;
-    padding: 10px 24px !important;
+    padding: 12px 24px !important; /* Botón un poco más alto */
     text-transform: none !important;
-    font-weight: 600 !important;
-    font-size: 1rem !important;
+    font-weight: 700 !important; /* Texto del botón más grueso */
+    font-size: 1.1rem !important; /* Texto del botón más grande */
     box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4) !important;
 }
 
-.btn-guardar:hover {
+.btn-guardar:hover:not(:disabled) {
     background: linear-gradient(135deg, #8b5cf6, #2563eb) !important;
     box-shadow: 0 6px 20px rgba(124, 58, 237, 0.6) !important;
+}
+
+.btn-guardar:disabled {
+    background: rgba(124, 58, 237, 0.5) !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    box-shadow: none !important;
 }
 
 /* Estilos de los inputs */
@@ -111,6 +119,7 @@
     color: #fff !important;
     background: rgba(21, 21, 34, 0.4) !important;
     border-radius: 8px;
+    font-size: 1.05rem; /* Letras un poco más grandes al escribir */
 }
 
 .custom-mui-input .MuiOutlinedInput-notchedOutline {
@@ -124,4 +133,26 @@
 .custom-mui-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
     border-color: #7c3aed !important;
     box-shadow: 0 0 10px rgba(124, 58, 237, 0.2);
+}
+
+/* --- ANIMACIONES DE CARGA PARA LA RANITA --- */
+.mascot-container.loading-mode {
+    animation: mascot-bounce 0.4s ease-in-out infinite alternate;
+    border-color: #ec4899; 
+    box-shadow: 0 4px 30px rgba(236, 72, 153, 0.6);
+}
+
+@keyframes mascot-bounce {
+    0% { transform: translateX(-50%) translateY(0); }
+    100% { transform: translateX(-50%) translateY(-15px); }
+}
+
+/* Hacemos que las estrellas cambien a color neón al cargar */
+.eyes-loading .pupil-star {
+    animation: pulse-star 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-star {
+    0% { fill: #2d2d2d; }
+    100% { fill: #ec4899; } 
 }
