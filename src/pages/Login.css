@@ -1,92 +1,123 @@
-/* Contenedor principal con resplandor sutil */
+/* Centra todo en la pantalla */
 .login-page-wrapper {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(circle at 50% -20%, #1e1a3a 0%, transparent 70%);
-    padding: 16px;
+    background: radial-gradient(circle at top, #1a1a2e, #0f0f0f);
+    padding: 1rem;
 }
 
-/* Tarjeta principal usando efecto de cristal en lugar de fondo sólido */
+/* Tarjeta principal */
 .login-form-container {
-    max-width: 400px;
+    max-width: 400px; 
     width: 100%;
-    padding: 32px 24px;
+    margin: 0 auto;
+    padding: 70px 32px 32px 32px; 
     background-color: rgba(21, 25, 36, 0.6);
     backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
     border-radius: 12px;
+    position: relative; 
 }
 
-/* Tipografía con degradado */
-/* Tipografía con degradado */
+/* --- ESTILOS DE LA MASCOTA MUSICAL --- */
+.mascot-container {
+    width: 120px;
+    height: 120px;
+    position: absolute;
+    top: -60px; 
+    left: 50%;
+    transform: translateX(-50%); 
+    border-radius: 50%;
+    background-color: #1a1a2e; 
+    border: 3px solid rgba(139, 92, 246, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    overflow: hidden; 
+    z-index: 10;
+}
+
+.mascot-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.mouth {
+    transition: d 0.3s ease;
+}
+
+.hands {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hands.down {
+    transform: translateY(40px); /* Ocultas abajo */
+}
+
+.hands.covering {
+    transform: translateY(-40px); /* Arriba tapando los ojos */
+}
+
+/* Animación cuando haces clic en "Ver Contraseña" */
+.hands.peeking .hand-left {
+    transform: translateY(-40px); /* La mano izquierda sigue tapando */
+}
+
+.hands.peeking .hand-right {
+    transform: translateY(-20px) translateX(15px); /* La derecha baja y se hace a un lado */
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- TEXTOS Y BOTONES --- */
 .login-title {
     text-align: center;
+    font-family: 'Montserrat', sans-serif !important;
     font-weight: 800 !important;
-    margin-bottom: 32px !important;
-    background: linear-gradient(to right, #8B5CF6, #3B82F6);
-    
-    /* Prefijos de WebKit */
+    margin-bottom: 24px !important;
+    background: linear-gradient(to right, #a855f7, #3b82f6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    
-    /* Propiedades estándar (¡esto quita el warning!) */
     background-clip: text;
     color: transparent;
 }
 
-/* Estilo para mensajes de error suavizados */
 .login-alert {
     margin-bottom: 24px !important;
     border-radius: 8px !important;
-    background-color: rgba(211, 47, 47, 0.1) !important;
+    background-color: rgba(236, 72, 153, 0.1) !important;
     color: #ffb4ab !important;
 }
 
-/* --- OVERRIDES DE MATERIAL UI PARA TEXTFIELDS --- */
-.custom-mui-input {
-    width: 100%;
-}
-
-.margin-bottom-normal {
-    margin-bottom: 16px !important;
-}
-
-.margin-bottom-large {
-    margin-bottom: 32px !important;
-}
-
-.custom-mui-input .MuiOutlinedInput-root {
-    background-color: rgba(0, 0, 0, 0.25);
-    border-radius: 8px;
-    transition: all 0.2s ease;
-}
-
-/* Quitamos el borde por defecto */
-.custom-mui-input .MuiOutlinedInput-notchedOutline {
-    border: none;
-}
-
-/* Borde al pasar el ratón */
-.custom-mui-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-    border: 1px solid rgba(139, 92, 246, 0.4);
-}
-
-/* Borde al enfocar (escribir) */
-.custom-mui-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-    border: 1px solid #8B5CF6;
-}
-
-.custom-input-icon {
-    color: #9CA3AF;
-}
-
-/* Botón principal */
-.login-button {
-    padding: 12px 0 !important;
+.btn-guardar {
+    background: linear-gradient(135deg, #7c3aed, #3b82f6) !important;
+    border-radius: 20px !important;
+    padding: 10px 24px !important;
+    text-transform: none !important;
+    font-weight: 600 !important;
     font-size: 1rem !important;
-    letter-spacing: 0.5px !important;
-    border-radius: 8px !important;
+}
+
+.btn-guardar:hover {
+    background: linear-gradient(135deg, #8b5cf6, #2563eb) !important;
+}
+
+/* Estilos de tus inputs */
+.custom-mui-input .MuiOutlinedInput-root {
+    color: #fff !important;
+    background: rgba(21, 21, 34, 0.4) !important;
+    border-radius: 8px;
+}
+
+.custom-mui-input .MuiOutlinedInput-notchedOutline {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.custom-mui-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: #7c3aed !important;
+}
+
+.custom-mui-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #7c3aed !important;
 }
