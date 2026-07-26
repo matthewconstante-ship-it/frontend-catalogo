@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import { 
-    Container, Typography, Button, Box, Paper, Table, TableBody, TableCell, 
-    TableContainer, TableHead, TableRow, Dialog, DialogTitle, DialogContent, 
-    DialogActions, TextField, InputAdornment, 
-    Snackbar, Alert, IconButton, Skeleton // <-- Añadido Skeleton aquí
+    Container, Typography, Button, Box, Dialog, DialogTitle, DialogContent, 
+    DialogActions, TextField, InputAdornment, Snackbar, Alert, Skeleton 
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -11,8 +9,8 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import LibraryMusicOutlinedIcon from '@mui/icons-material/LibraryMusicOutlined';
 
-import Navbar from '../components/Navbar';
 import PageTransition from '../components/PageTransition'; 
+import MiniRadio from '../components/MiniRadio';
 import api from '../services/api'; 
 import './Artistas.css'; 
 
@@ -23,7 +21,7 @@ const Artistas = () => {
     const [openModal, setOpenModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [modalMode, setModalMode] = useState('crear');
-    const [formData, setFormData] = useState({ id: null, nombre: '', genero: '', biografia: '' });
+    const [formData, setFormData] = useState({ id: null, nombre: '', genero: '', biografia: '', foto: null });
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
     useEffect(() => {
@@ -45,7 +43,7 @@ const Artistas = () => {
 
     const handleOpen = (modo, artista = null) => {
         setModalMode(modo);
-        setFormData(modo === 'editar' && artista ? artista : { id: null, nombre: '', genero: '', biografia: '' });
+        setFormData(modo === 'editar' && artista ? artista : { id: null, nombre: '', genero: '', biografia: '', foto: null });
         setOpenModal(true);
     };
 
@@ -60,13 +58,26 @@ const Artistas = () => {
     };
 
     const handleSave = async () => {
+        const dataToSend = new FormData();
+        dataToSend.append('nombre', formData.nombre);
+        dataToSend.append('genero', formData.genero);
+        dataToSend.append('biografia', formData.biografia);
+        
+        if (formData.foto instanceof File) {
+            dataToSend.append('foto', formData.foto);
+        }
+
         try {
             if (modalMode === 'crear') {
-                const response = await api.post('artistas/', formData);
+                const response = await api.post('artistas/', dataToSend, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
                 setArtistas([...artistas, response.data]);
                 setSnackbar({ open: true, message: 'Artista creado con éxito', severity: 'success' });
             } else {
-                const response = await api.put(`artistas/${formData.id}/`, formData);
+                const response = await api.put(`artistas/${formData.id}/`, dataToSend, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
                 setArtistas(artistas.map(a => (a.id === formData.id ? response.data : a)));
                 setSnackbar({ open: true, message: 'Artista actualizado con éxito', severity: 'success' });
             }
@@ -97,125 +108,123 @@ const Artistas = () => {
 
     return (
         <PageTransition>
-            <Navbar />
+            <MiniRadio />
+
             <Container maxWidth="lg" className="artistas-page">
                 <Box className="artistas-header">
-                    <Typography variant="h4" component="h1" className="artistas-title">
-                        Gestión de Artistas
-                    </Typography>
-                    <Button 
-                        variant="contained" 
-                        className="btn-nuevo-artista"
-                        startIcon={<AddIcon />}
-                        onClick={() => handleOpen('crear')}
+                    <Typography 
+                        variant="h4" 
+                        component="h1" 
+                        sx={(theme) => ({
+                            fontFamily: "'Montserrat', sans-serif",
+                            fontWeight: 800,
+                            background: theme.palette.mode === 'dark' 
+                                ? 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #2563eb 100%)'
+                                : 'linear-gradient(135deg, #6d28d9 0%, #2563eb 100%)',
+                            backgroundClip: 'text',
+                            WebkitBackgroundClip: 'text',
+                            color: 'transparent',
+                            WebkitTextFillColor: 'transparent',
+                            display: 'inline-block',
+                            transform: 'translateZ(0)',
+                            willChange: 'transform, opacity'
+                        })}
                     >
+                        Tus Artistas Favoritos ✨
+                    </Typography>
+                    <Button variant="contained" className="btn-nuevo-artista" startIcon={<AddIcon />} onClick={() => handleOpen('crear')}>
                         Nuevo Artista
                     </Button>
                 </Box>
 
                 <Box className="search-box">
-                    <TextField
-                        className="custom-search-input"
-                        fullWidth 
-                        variant="outlined" 
-                        placeholder="Buscar por nombre, género o biografía..."
-                        value={busqueda} 
-                        onChange={(e) => setBusqueda(e.target.value)}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon className="search-icon" />
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
+                    <TextField className="custom-search-input" fullWidth variant="outlined" placeholder="Buscar por nombre, género o biografía..." value={busqueda} onChange={(e) => setBusqueda(e.target.value)} InputProps={{ startAdornment: ( <InputAdornment position="start"><SearchIcon className="search-icon" /></InputAdornment>) }} />
                 </Box>
 
-                {/* TABLA PREMIUM CON SKELETONS DE CARGA */}
-                <TableContainer component={Paper} elevation={0} className="custom-table-container">
-                    <Table>
-                        <TableHead className="custom-table-head">
-                            <TableRow>
-                                <TableCell>ID</TableCell>
-                                <TableCell>Nombre</TableCell>
-                                <TableCell>Género</TableCell>
-                                <TableCell>Biografía</TableCell>
-                                <TableCell align="right">Acciones</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {loading ? (
-                                // Renderizamos 4 filas falsas (Skeletons) mientras carga
-                                [1, 2, 3, 4].map((item) => (
-                                    <TableRow key={item} className="custom-table-row">
-                                        <TableCell className="custom-table-cell"><Skeleton variant="text" width={30} /></TableCell>
-                                        <TableCell className="custom-table-cell"><Skeleton variant="text" width={120} /></TableCell>
-                                        <TableCell className="custom-table-cell"><Skeleton variant="text" width={90} /></TableCell>
-                                        <TableCell className="custom-table-cell"><Skeleton variant="text" width={200} /></TableCell>
-                                        <TableCell align="right" className="custom-table-cell">
-                                            <Skeleton variant="circular" width={30} height={30} sx={{ display: 'inline-block', mr: 1, bgcolor: 'rgba(255,255,255,0.08)' }} />
-                                            <Skeleton variant="circular" width={30} height={30} sx={{ display: 'inline-block', bgcolor: 'rgba(255,255,255,0.08)' }} />
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            ) : (
-                                artistasFiltrados.map((a) => (
-                                    <TableRow key={a.id} className="custom-table-row">
-                                        <TableCell className="custom-table-cell cell-id">{a.id}</TableCell>
-                                        <TableCell className="custom-table-cell cell-main">{a.nombre}</TableCell>
-                                        <TableCell className="custom-table-cell">{a.genero}</TableCell>
-                                        <TableCell className="custom-table-cell bio-cell">
-                                            {a.biografia || <span className="empty-text">Sin biografía</span>}
-                                        </TableCell>
-                                        <TableCell align="right" className="custom-table-cell">
-                                            <IconButton 
-                                                size="small" 
-                                                onClick={() => handleOpen('editar', a)}
-                                                className="btn-action-edit"
-                                                title="Editar"
-                                            >
+                {loading ? (
+                    <Box className="cards-grid">
+                        {[1, 2, 3, 4, 5, 6].map(i => (
+                            <Skeleton key={i} variant="rectangular" width={260} height={320} sx={{ borderRadius: '1rem', bgcolor: 'rgba(255,255,255,0.05)' }} />
+                        ))}
+                    </Box>
+                ) : (
+                    <Box className="cards-grid">
+                        {artistasFiltrados.map((a) => (
+                            <div key={a.id} className="uiverse-card">
+                                <div className="card-bg-base">
+                                    <div className="card-bg-inner"></div>
+                                </div>
+
+                                <div className="card-vinyl-container">
+                                    {a.foto ? (
+                                        <>
+                                            <img src={a.foto} className="card-vinyl-image" alt={a.nombre} />
+                                            <div className="card-vinyl-hole"></div>
+                                        </>
+                                    ) : (
+                                        <div className="card-vinyl-gradient">
+                                            <div className="card-vinyl-hole"></div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="card-content-overlay">
+                                    <div className="card-text-box">
+                                        <span className="card-title">{a.nombre}</span>
+                                        <span className="card-subtitle">{a.biografia || 'Sin biografía'}</span>
+                                        <div className="card-bottom-text">
+                                            <span>ID: {a.id}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="card-actions-col">
+                                        <div className="card-tags-container">
+                                            <span className="card-tag">{a.genero || 'Varios'}</span>
+                                            <span className="card-tag-label">Género</span>
+                                        </div>
+
+                                        <div className="card-actions-buttons">
+                                            <button className="card-action-btn edit" onClick={() => handleOpen('editar', a)} title="Editar">
                                                 <EditOutlinedIcon fontSize="small" />
-                                            </IconButton>
-                                            <IconButton 
-                                                size="small" 
-                                                onClick={() => { setFormData(a); setOpenDeleteModal(true); }}
-                                                className="btn-action-delete"
-                                                title="Eliminar"
-                                            >
+                                            </button>
+                                            <button className="card-action-btn delete" onClick={() => { setFormData(a); setOpenDeleteModal(true); }} title="Eliminar">
                                                 <DeleteOutlinedIcon fontSize="small" />
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            )}
-                            
-                            {!loading && artistasFiltrados.length === 0 && (
-                                <TableRow>
-                                    <TableCell colSpan={5} align="center" className="empty-state-cell">
-                                        <Box className="empty-state-container">
-                                            <LibraryMusicOutlinedIcon className="empty-state-icon" />
-                                            <Typography variant="h6" className="empty-state-title">
-                                                No hay artistas a la vista
-                                            </Typography>
-                                            <Typography variant="body2" className="empty-state-subtitle">
-                                                Intenta con otra búsqueda o agrega un nuevo artista al catálogo.
-                                            </Typography>
-                                        </Box>
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+
+                        {artistasFiltrados.length === 0 && (
+                            <Box className="empty-state-full-width">
+                                <Box className="empty-state-container">
+                                    <LibraryMusicOutlinedIcon className="empty-state-icon" />
+                                    <Typography variant="h6" className="empty-state-title">No hay artistas a la vista</Typography>
+                                    <Typography variant="body2" className="empty-state-subtitle">Intenta con otra búsqueda o agrega un nuevo artista al catálogo.</Typography>
+                                </Box>
+                            </Box>
+                        )}
+                    </Box>
+                )}
             </Container>
 
-            {/* MODALES Y SNACKBAR (Sin cambios, idénticos a los que ya tienes) */}
             <Dialog open={openModal} onClose={handleClose} maxWidth="sm" fullWidth PaperProps={{ className: 'custom-dialog-paper' }}>
                 <DialogTitle className="dialog-title">{modalMode === 'crear' ? 'Registrar Nuevo Artista' : 'Editar Artista'}</DialogTitle>
                 <DialogContent>
                     <TextField className="custom-dialog-input" fullWidth margin="dense" label="Nombre" value={formData.nombre || ''} onChange={(e) => setFormData({...formData, nombre: e.target.value})} />
                     <TextField className="custom-dialog-input" fullWidth margin="dense" label="Género" value={formData.genero || ''} onChange={(e) => setFormData({...formData, genero: e.target.value})} />
                     <TextField className="custom-dialog-input" fullWidth margin="dense" label="Biografía" multiline rows={3} value={formData.biografia || ''} onChange={(e) => setFormData({...formData, biografia: e.target.value})} />
+                    
+                    <Button variant="outlined" component="label" fullWidth sx={{ mt: 2, mb: 1, borderColor: 'rgba(255, 255, 255, 0.2)', color: '#9ca3af', textTransform: 'none', borderRadius: '8px', '&:hover': { borderColor: '#7c3aed', color: '#fff', backgroundColor: 'rgba(124, 58, 237, 0.05)' } }}>
+                        {formData.foto ? 'Cambiar Fotografía' : 'Subir Fotografía'}
+                        <input type="file" hidden accept="image/*" onChange={(e) => setFormData({...formData, foto: e.target.files[0]})} />
+                    </Button>
+                    {formData.foto && (
+                        <Typography variant="caption" sx={{ color: '#a855f7', display: 'block', textAlign: 'center', fontWeight: 600 }}>
+                            {typeof formData.foto === 'string' ? '✓ Fotografía actual cargada' : `✓ ${formData.foto.name}`}
+                        </Typography>
+                    )}
                 </DialogContent>
                 <DialogActions className="dialog-actions">
                     <Button onClick={handleClose} className="btn-cancelar">Cancelar</Button>

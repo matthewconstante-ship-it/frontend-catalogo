@@ -1,90 +1,198 @@
+/* =========================================
+   BARRA DE NAVEGACIÓN GLASSMORPHISM
+   ========================================= */
 .navbar-glass {
-    background-color: rgba(21, 25, 36, 0.7) !important;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-    top: 0;
-    z-index: 1100;
+  background-color: rgba(15, 18, 30, 0.6) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  top: 0;
+  z-index: 1100;
+  transition: all 0.4s ease;
 }
 
 .navbar-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 32px !important;
-    min-height: 72px !important;
-    position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 32px !important;
+  min-height: 72px !important;
+  position: relative;
 }
 
 .navbar-brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
 }
 
 .navbar-logo-icon {
-    color: #8B5CF6;
-    font-size: 28px !important;
+  color: #ec4899;
+  font-size: 28px !important;
+  filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.5));
 }
 
 .navbar-title {
-    font-weight: 800 !important;
-    background: linear-gradient(to right, #8B5CF6, #3B82F6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
-    letter-spacing: 0.5px;
-    margin: 0 !important;
+  font-weight: 800 !important;
+  background: linear-gradient(to right, #ec4899, #8b5cf6, #2563eb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.5px;
+  margin: 0 !important;
 }
 
-/* Enlaces perfectamente centrados */
-.navbar-links {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+/* =========================================
+   SELECTOR SLIDER (UIVERSE ADAPTADO)
+   ========================================= */
+.radio-group {
+  display: flex;
+  gap: 0;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+  padding: 4px;
+  border-radius: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 230px;
+  height: 42px;
+  transition: all 0.3s ease;
 }
 
-.nav-item {
-    text-decoration: none;
-    color: #9CA3AF;
-    font-weight: 600;
-    font-size: 0.95rem;
-    letter-spacing: 0.3px;
-    padding: 8px 16px;
-    border-radius: 8px;
-    transition: all 0.2s ease;
+.slider {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  background: linear-gradient(135deg, #ec4899, #7c3aed);
+  border-radius: 25px;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+  z-index: 0;
 }
 
-.nav-item:hover {
-    color: #F3F4F6;
-    background-color: rgba(255, 255, 255, 0.05);
+.radio-option {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  height: 100%;
 }
 
-.nav-item.active {
-    color: #F3F4F6;
-    background-color: rgba(139, 92, 246, 0.15);
+.radio-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  margin: 0;
 }
 
-/* Botón de cerrar sesión limpio, a la derecha y sin estirarse */
-.logout-button {
-    text-transform: none !important;
-    border: 1px solid rgba(244, 63, 94, 0.3) !important;
-    color: #f43f5e !important;
-    font-weight: 600 !important;
-    border-radius: 20px !important;
-    padding: 6px 20px !important;
-    background-color: transparent !important;
-    width: auto !important;
-    min-width: unset !important;
-    margin-left: auto;
-    transition: all 0.2s ease !important;
+.radio-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0 16px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+  border-radius: 25px;
+  white-space: nowrap;
 }
 
-.logout-button:hover {
-    background-color: rgba(244, 63, 94, 0.1) !important;
-    border-color: #f43f5e !important;
+.radio-option input[type="radio"]:checked + .radio-label {
+  color: #ffffff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.radio-label:hover {
+  color: #ffffff;
+}
+
+/* Posicionamiento para 2 Pestañas */
+.radio-group:has(#nav-artistas:checked) .slider {
+  left: 4px;
+  width: calc(50% - 4px);
+}
+
+.radio-group:has(#nav-albumes:checked) .slider {
+  left: calc(50%);
+  width: calc(50% - 4px);
+}
+
+/* =========================================
+   BOTÓN CERRAR SESIÓN NEÓN GLASS
+   ========================================= */
+.logout-btn-glass {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 25px;
+  background: rgba(244, 63, 94, 0.08);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  color: #f43f5e;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(244, 63, 94, 0.1);
+}
+
+.logout-btn-glass:hover {
+  background: rgba(244, 63, 94, 0.85);
+  color: #ffffff;
+  border-color: #f43f5e;
+  box-shadow: 0 6px 20px rgba(244, 63, 94, 0.4);
+  transform: translateY(-2px);
+}
+
+.logout-btn-icon {
+  font-size: 18px !important;
+  transition: transform 0.3s ease;
+}
+
+.logout-btn-glass:hover .logout-btn-icon {
+  transform: translateX(3px);
+}
+
+/* =========================================
+   SOPORTE PARA MODO CLARO
+   ========================================= */
+body.light-mode .navbar-glass {
+  background-color: rgba(255, 255, 255, 0.75) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+body.light-mode .radio-group {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .radio-label {
+  color: #64748b;
+}
+
+body.light-mode .radio-option input[type="radio"]:checked + .radio-label {
+  color: #ffffff;
+}
+
+body.light-mode .logout-btn-glass {
+  background: rgba(244, 63, 94, 0.08);
+  border-color: rgba(244, 63, 94, 0.3);
+  color: #e11d48;
+}
+
+body.light-mode .logout-btn-glass:hover {
+  background: #f43f5e;
+  color: #ffffff;
 }

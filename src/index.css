@@ -1,49 +1,268 @@
-html {
-  scroll-behavior: smooth;
-}
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap');
 
-body {
+html, body {
   margin: 0;
-  background: radial-gradient(circle at top, #1a1a2e, #0f0f0f);
-  background-attachment: fixed;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: 'Outfit', sans-serif;
   color: #f3f4f6;
-  font-family: 'Outfit', 'Poppins', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background-color: #050508;
+  scroll-behavior: smooth;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-/* Efecto de selección de texto con estilo profesional */
-::selection {
-  background: #7c3aed;
-  color: #ffffff;
+/* =========================================
+   ESTILOS DE MODO CLARO (LIGHT MODE)
+   ========================================= */
+body.light-mode {
+  background-color: #f8fafc;
+  color: #0f172a;
 }
 
-/* Scrollbar personalizado tipo producto real */
-::-webkit-scrollbar {
-  width: 8px;
+body.light-mode .fluid-bg-container {
+  background-color: #f1f5f9;
 }
 
-::-webkit-scrollbar-track {
-  background: #0f0f0f;
+body.light-mode .orb-1 {
+  background: radial-gradient(circle, #60a5fa 0%, #c084fc 50%, transparent 80%);
 }
 
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #7c3aed, #3b82f6);
-  border-radius: 4px;
+body.light-mode .orb-2 {
+  background: radial-gradient(circle, #f472b6 0%, #fb923c 60%, transparent 80%);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #8b5cf6, #2563eb);
+body.light-mode .orb-3 {
+  background: radial-gradient(circle, #a78bfa 0%, #f472b6 50%, #60a5fa 80%);
+}
+
+body.light-mode .fluid-bg-container::after {
+  background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 0);
+}
+body.light-mode .artistas-title,
+body.light-mode .albumes-title {
+  background: linear-gradient(135deg, #6d28d9 0%, #2563eb 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* NAVBAR Y NAVEGACIÓN */
+body.light-mode .navbar-glass {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+body.light-mode .nav-item {
+  color: #475569;
+}
+
+body.light-mode .nav-item:hover {
+  color: #0f172a;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .nav-item.active {
+  color: #7c3aed;
+  background-color: rgba(124, 58, 237, 0.1);
+}
+
+/* TARJETAS Y BUSCADOR */
+body.light-mode .card-text-box {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  color: #0f172a !important;
+}
+
+body.light-mode .card-title {
+  color: #0f172a !important;
+}
+
+body.light-mode .card-subtitle {
+  color: #475569 !important;
+}
+
+body.light-mode .card-action-btn {
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: #334155 !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+body.light-mode .custom-search-input .MuiOutlinedInput-root {
+  background: rgba(255, 255, 255, 0.85) !important;
+  color: #0f172a !important;
+}
+
+body.light-mode .custom-search-input .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+/* LOGIN */
+body.light-mode .login-form-container {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+}
+
+body.light-mode .custom-mui-input .MuiOutlinedInput-root {
+  color: #0f172a !important;
+  background: rgba(241, 245, 249, 0.8) !important;
+}
+
+/* =========================================
+   CORRECCIÓN DE MODALES (MODO CLARO)
+   ========================================= */
+body.light-mode .custom-dialog-paper {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12) !important;
+}
+
+body.light-mode .dialog-title {
+  color: #0f172a !important;
+}
+
+body.light-mode .dialog-text {
+  color: #475569 !important;
+}
+
+/* Campos de texto de los modales */
+body.light-mode .custom-dialog-input .MuiOutlinedInput-root {
+  color: #0f172a !important;
+  background: #f1f5f9 !important;
+}
+
+body.light-mode .custom-dialog-input .MuiInputLabel-root {
+  color: #64748b !important;
+}
+
+body.light-mode .custom-dialog-input .MuiInputLabel-root.Mui-focused {
+  color: #7c3aed !important;
+}
+
+body.light-mode .custom-dialog-input .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+body.light-mode .custom-dialog-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #7c3aed !important;
+}
+
+/* Iconos de calendario / Select en inputs */
+body.light-mode .custom-dialog-input svg {
+  color: #475569 !important;
+}
+
+/* Menú desplegable del Select */
+body.light-mode .MuiMenu-paper {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+body.light-mode .MuiMenuItem-root:hover {
+  background-color: rgba(124, 58, 237, 0.08) !important;
+}
+
+/* Botones de acción en Modales */
+body.light-mode .btn-cancelar {
+  color: #64748b !important;
+}
+
+body.light-mode .btn-cancelar:hover {
+  color: #0f172a !important;
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Botón de subir archivo dentro del modal */
+body.light-mode .MuiButton-outlined {
+  border-color: rgba(0, 0, 0, 0.2) !important;
+  color: #475569 !important;
+}
+
+body.light-mode .MuiButton-outlined:hover {
+  border-color: #7c3aed !important;
+  color: #7c3aed !important;
+  background-color: rgba(124, 58, 237, 0.05) !important;
+}
+
+/* =========================================
+   FONDO LÍQUIDO FLUIDO (ESTILOS BASE)
+   ========================================= */
+.fluid-bg-container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background-color: #05050a;
+  transition: background-color 0.4s ease;
+}
+
+.fluid-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.75;
+  animation: float-fluid 18s ease-in-out infinite alternate;
+  transition: background 0.4s ease;
+}
+
+.orb-1 {
+  width: 600px;
+  height: 600px;
+  top: -100px;
+  left: -100px;
+  background: radial-gradient(circle, #2563eb 0%, #7c3aed 50%, transparent 80%);
+}
+
+.orb-2 {
+  width: 500px;
+  height: 500px;
+  top: 30%;
+  right: -100px;
+  background: radial-gradient(circle, #ec4899 0%, #f97316 60%, transparent 80%);
+  animation-delay: -5s;
+  animation-duration: 22s;
+}
+
+.orb-3 {
+  width: 550px;
+  height: 550px;
+  bottom: -150px;
+  left: 20%;
+  background: radial-gradient(circle, #8b5cf6 0%, #ec4899 50%, #2563eb 80%);
+  animation-delay: -10s;
+  animation-duration: 25s;
+}
+
+@keyframes float-fluid {
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  50% { transform: translate(80px, 60px) scale(1.15) rotate(180deg); }
+  100% { transform: translate(-60px, 100px) scale(0.9) rotate(360deg); }
+}
+
+.fluid-bg-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 0);
+  background-size: 3px 3px;
+  opacity: 0.35;
+  pointer-events: none;
 }
 
 #root {
-  width: 100%;       /* Ocupa el 100% de la pantalla */
-  max-width: none;   /* Elimina cualquier límite de ancho */
-  margin: 0;         /* Elimina el centrado forzado */
-  padding: 0;        /* Elimina el espacio interno si lo deseas */
-  border-inline: none; /* Elimina la línea lateral */
+  position: relative;
+  z-index: 1;
+  width: 100%;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #ec4899, #7c3aed);
+  border-radius: 4px;
 }

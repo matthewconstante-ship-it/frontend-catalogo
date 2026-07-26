@@ -23,18 +23,18 @@
     position: relative; 
 }
 
-/* --- ESTILOS DE LA MASCOTA MUSICAL --- */
+/* --- ESTILOS DE LA MASCOTA PATO PREMIUM --- */
 .mascot-container {
-    width: 120px;
-    height: 120px;
+    width: 110px;
+    height: 110px;
     position: absolute;
-    top: -60px; 
+    top: -55px; 
     left: 50%;
     transform: translateX(-50%); 
     border-radius: 50%;
     background-color: #1a1a2e; 
-    border: 3px solid rgba(139, 92, 246, 0.4);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(139, 92, 246, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
     overflow: hidden; 
     z-index: 10;
 }
@@ -48,25 +48,26 @@
     transition: d 0.3s ease;
 }
 
+/* Animaciones de las alas */
 .hands {
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hands.down {
-    transform: translateY(40px); /* Ocultas abajo */
+    transform: translateY(30px); /* Alas descansando abajo */
 }
 
 .hands.covering {
-    transform: translateY(-40px); /* Arriba tapando los ojos */
+    transform: translateY(-50px); /* Alas arriba tapando los ojos */
 }
 
-/* Animación cuando haces clic en "Ver Contraseña" */
+/* Pato espiando la contraseña */
 .hands.peeking .hand-left {
-    transform: translateY(-40px); /* La mano izquierda sigue tapando */
+    transform: translateY(-50px); /* Ala izquierda se queda arriba */
 }
 
 .hands.peeking .hand-right {
-    transform: translateY(-20px) translateX(15px); /* La derecha baja y se hace a un lado */
+    transform: translateY(-25px) translateX(15px); /* Ala derecha baja y se aparta */
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -97,13 +98,15 @@
     text-transform: none !important;
     font-weight: 600 !important;
     font-size: 1rem !important;
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4) !important;
 }
 
 .btn-guardar:hover {
     background: linear-gradient(135deg, #8b5cf6, #2563eb) !important;
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.6) !important;
 }
 
-/* Estilos de tus inputs */
+/* Estilos de los inputs */
 .custom-mui-input .MuiOutlinedInput-root {
     color: #fff !important;
     background: rgba(21, 21, 34, 0.4) !important;
@@ -111,13 +114,14 @@
 }
 
 .custom-mui-input .MuiOutlinedInput-notchedOutline {
-    border-color: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 .custom-mui-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-    border-color: #7c3aed !important;
+    border-color: rgba(124, 58, 237, 0.5) !important;
 }
 
 .custom-mui-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
     border-color: #7c3aed !important;
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.2);
 }

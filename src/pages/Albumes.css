@@ -1,185 +1,166 @@
-.albumes-page {
-  margin-top: 2rem;
-  margin-bottom: 3rem;
-}
-
-.albumes-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-}
-
+/* =========================================
+   ESTILOS GENERALES
+   ========================================= */
+.albumes-page { margin-top: 2rem; margin-bottom: 3rem; }
+.albumes-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
 .albumes-title {
   font-family: 'Montserrat', sans-serif !important;
   font-weight: 800 !important;
-  background: linear-gradient(to right, #a855f7, #3b82f6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
+  display: inline-block !important; /* <--- Clave para que background-clip no desaparezca el texto */
+  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #2563eb 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
 }
-
 .btn-nuevo-album {
   background: linear-gradient(135deg, #7c3aed, #3b82f6) !important;
-  border-radius: 30px !important;
-  padding: 10px 24px !important;
-  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4) !important;
-  text-transform: none !important;
-  font-weight: 600 !important;
+  border-radius: 30px !important; padding: 10px 24px !important; text-transform: none !important; font-weight: 600 !important;
+}
+.btn-nuevo-album:hover { box-shadow: 0 6px 25px rgba(124, 58, 237, 0.6) !important; }
+
+/* =========================================
+   BUSCADOR MODERNO
+   ========================================= */
+.search-box { margin-bottom: 2rem; }
+.custom-search-input .MuiOutlinedInput-root {
+  border-radius: 30px !important; background: rgba(21, 21, 34, 0.6) !important; color: #fff !important;
+}
+.custom-search-input .MuiOutlinedInput-notchedOutline { border: 1px solid rgba(255, 255, 255, 0.1) !important; }
+.custom-search-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline,
+.custom-search-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline { border-color: #7c3aed !important; }
+.search-icon { color: #9ca3af; }
+
+/* =========================================
+   DISEÑO DE CARTAS (Efecto Vinilo)
+   ========================================= */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 2rem; margin-top: 2rem; justify-items: center;
 }
 
-.btn-nuevo-album:hover {
-  background: linear-gradient(135deg, #8b5cf6, #2563eb) !important;
-  box-shadow: 0 6px 25px rgba(124, 58, 237, 0.6) !important;
+.uiverse-card {
+  width: 260px; height: 320px; position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.uiverse-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(59, 130, 246, 0.3);
 }
 
-/* Buscador Moderno */
-.search-box {
-  margin-bottom: 2rem;
+/* Fondo Base (Borde interior azul para diferenciar de artistas) */
+.card-bg-base {
+  width: 100%; height: 100%; padding: 0.3rem; position: absolute;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+.card-bg-inner {
+  width: 100%; height: 100%; background-color: #151924;
+  border-radius: 0.8rem; border-top-right-radius: 100px; border-bottom-right-radius: 40px;
 }
 
-.search-input .MuiOutlinedInput-root {
-  border-radius: 30px !important;
-  background: rgba(21, 21, 34, 0.6) !important;
-  backdrop-filter: blur(20px) !important;
-  color: #fff !important;
+/* =========================================
+   EL VINILO
+   ========================================= */
+.card-vinyl-container {
+  position: absolute;
+  top: 50%; right: 10px; /* Acomodado a la derecha */
+  transform: translateY(-50%);
+  width: 140px; height: 140px; border-radius: 50%;
+  background-color: #111;
+  border: 2px solid #222;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center;
+  animation: spin 10s linear infinite;
+  z-index: 1; /* Detrás del panel de cristal */
+}
+.card-vinyl-image {
+  width: 126px; height: 126px; border-radius: 50%; object-fit: cover;
+  border: 4px solid #1a1a1a; /* Borde oscuro simulando el disco */
+}
+.card-vinyl-gradient {
+  width: 126px; height: 126px; border-radius: 50%;
+  background: linear-gradient(to top right, #3b82f6, #a855f7);
+  border: 4px solid #1a1a1a; display: flex; align-items: center; justify-content: center;
+}
+.card-vinyl-hole {
+  position: absolute;
+  width: 14px; height: 14px; border-radius: 50%;
+  background-color: #151924; /* Mismo color del fondo para simular hueco */
+  border: 2px solid #2a2a2a; z-index: 2;
 }
 
-.search-input .MuiOutlinedInput-notchedOutline {
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+@keyframes spin {
+  from { transform: translateY(-50%) rotate(0deg); }
+  to { transform: translateY(-50%) rotate(360deg); }
 }
 
-.search-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-  border-color: rgba(124, 58, 237, 0.5) !important;
+/* =========================================
+   FUNDA DE CRISTAL Y BOTONES
+   ========================================= */
+.card-content-overlay {
+  position: absolute; inset: 0; padding: 10px;
+  display: flex; justify-content: space-between; z-index: 2; pointer-events: none;
 }
 
-.search-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-  border-color: #7c3aed !important;
-  box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
+/* El panel que cubre solo la mitad izquierda */
+.card-text-box {
+  width: 58%; height: 100%; padding: 16px 12px;
+  display: flex; flex-direction: column; border-radius: 12px;
+  background: rgba(25, 30, 45, 0.45);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.15); /* Borde que marca la funda */
+  box-shadow: 4px 0 15px rgba(0,0,0,0.3);
+  color: #e5e7eb; pointer-events: auto;
 }
 
-/* Tabla de Álbumes Premium */
-/* --- CONTENEDOR DE TABLA UNIFICADO --- */
-.custom-table-container {
-    background-color: rgba(21, 25, 36, 0.5) !important;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.06) !important;
-    border-radius: 12px !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
-    overflow: hidden !important;
+.card-title { font-size: 1.25rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 6px; }
+.card-subtitle {
+  font-size: 0.8rem; color: #9ca3af;
+  display: -webkit-box; -webkit-line-clamp: 4; line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
 }
+.card-bottom-text { margin-top: auto; font-size: 0.75rem; color: #9ca3af; font-weight: 600; text-align: center; }
 
-.custom-table-head {
-  background-color: rgba(123, 47, 247, 0.1) !important;
+/* Botones flotantes a la derecha */
+.card-actions-col {
+  width: 38%; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between;
+  padding: 5px; pointer-events: auto;
 }
+.card-tags-container { display: flex; flex-direction: column; align-items: flex-end; }
+.card-tag { font-size: 14px; font-weight: 700; color: #fff; text-align: right; white-space: nowrap; max-width: 80px; overflow: hidden; text-overflow: ellipsis;}
+.card-tag-label { font-size: 11px; color: rgba(255,255,255,0.5); }
 
-.custom-table-head th {
-  color: #00C6FF !important;
-  font-weight: 800 !important;
+.card-actions-buttons { display: flex; flex-direction: column; gap: 10px; }
+.card-action-btn {
+  width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: rgba(21, 25, 36, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15); color: rgba(255,255,255,0.8); cursor: pointer; transition: all 0.2s;
 }
+.card-action-btn.edit:hover { background: rgba(59, 130, 246, 0.7); color: #fff; border-color: #3b82f6; }
+.card-action-btn.delete:hover { background: rgba(236, 72, 153, 0.7); color: #fff; border-color: #ec4899; }
 
-.custom-table-row {
-  transition: background-color 0.2s ease !important;
-}
+/* =========================================
+   RESTO DE ESTILOS (Estado Vacío y Modales)
+   ========================================= */
+.empty-state-full-width { grid-column: 1 / -1; width: 100%; padding: 4rem 1rem; background-color: rgba(21, 25, 36, 0.5); backdrop-filter: blur(16px); border-radius: 12px; display: flex; justify-content: center; }
+.empty-state-container { display: flex; flex-direction: column; align-items: center; opacity: 0.7; }
+.empty-state-icon { font-size: 56px !important; color: #9ca3af; margin-bottom: 12px; }
+.empty-state-title { color: #fff !important; font-weight: 700 !important; }
+.empty-state-subtitle { color: #9ca3af !important; }
 
-.custom-table-row:hover {
-  background-color: rgba(123, 47, 247, 0.12) !important;
-}
-
-.custom-table-cell {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-  color: #cbd5e1 !important;
-}
-
-.custom-table-cell-main {
-  color: #fff !important;
-  font-weight: 600 !important;
-}
-
-/* Botones de acción */
-.btn-action-edit {
-  color: #3b82f6 !important;
-  background-color: rgba(59, 130, 246, 0.1) !important;
-  margin-right: 8px !important;
-}
-
-.btn-action-edit:hover {
-  background-color: rgba(59, 130, 246, 0.2) !important;
-}
-
-.btn-action-delete {
-  color: #ec4899 !important;
-  background-color: rgba(236, 72, 153, 0.1) !important;
-}
-
-.btn-action-delete:hover {
-  background-color: rgba(236, 72, 153, 0.2) !important;
-}
-
-/* Modales */
-.custom-dialog-paper {
-  border-radius: 24px !important;
-  background: #1a1a2e !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-.dialog-title {
-  color: #fff !important;
-  font-weight: 700 !important;
-  font-family: 'Montserrat', sans-serif !important;
-}
-
-.dialog-input .MuiOutlinedInput-root {
-  color: #fff !important;
-}
-
-.dialog-input .MuiInputLabel-root {
-  color: #9ca3af !important;
-}
-
-.dialog-input .MuiOutlinedInput-notchedOutline {
-  border-color: rgba(255, 255, 255, 0.2) !important;
-}
-
-.dialog-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-  border-color: #7c3aed !important;
-}
-
-.dialog-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-  border-color: #7c3aed !important;
-}
-
-/* Estilo para los menús desplegables del select en dark mode */
-.MuiMenu-paper {
-  background-color: #1a1a2e !important;
-  color: #fff !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-.btn-guardar {
-  background: linear-gradient(135deg, #7c3aed, #3b82f6) !important;
-  border-radius: 20px !important;
-  padding: 6px 24px !important;
-  text-transform: none !important;
-}
-
-.btn-guardar:hover {
-  background: linear-gradient(135deg, #8b5cf6, #2563eb) !important;
-}
-
-.btn-eliminar-modal {
-  background-color: #ec4899 !important;
-  border-radius: 20px !important;
-  padding: 6px 24px !important;
-  text-transform: none !important;
-}
-
-.btn-eliminar-modal:hover {
-  background-color: #db2777 !important;
-}
-/* Estilo para los Skeletons de carga */
-.MuiSkeleton-root {
-  background-color: rgba(255, 255, 255, 0.08) !important;
-}
+.custom-dialog-paper { border-radius: 24px !important; background: #1a1a2e !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; }
+.dialog-title { color: #fff !important; font-weight: 700 !important; font-family: 'Montserrat', sans-serif !important; }
+.text-danger { color: #ec4899 !important; }
+.dialog-text { color: #9ca3af !important; }
+.custom-dialog-input { margin-top: 1rem !important; }
+.custom-dialog-input .MuiOutlinedInput-root { color: #fff !important; background: rgba(21, 21, 34, 0.4) !important; }
+.custom-dialog-input .MuiInputLabel-root { color: #9ca3af !important; }
+.custom-dialog-input .MuiOutlinedInput-notchedOutline { border-color: rgba(255, 255, 255, 0.2) !important; }
+.custom-dialog-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline, .custom-dialog-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline { border-color: #7c3aed !important; }
+.dialog-actions { padding: 1.5rem !important; }
+.btn-cancelar { color: #9ca3af !important; text-transform: none !important; }
+.btn-guardar { background: linear-gradient(135deg, #7c3aed, #3b82f6) !important; border-radius: 20px !important; padding: 6px 24px !important; text-transform: none !important; }
+.btn-eliminar-modal { background-color: #ec4899 !important; border-radius: 20px !important; padding: 6px 24px !important; text-transform: none !important; }
+.custom-alert { border-radius: 12px !important; }
