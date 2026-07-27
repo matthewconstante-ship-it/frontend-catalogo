@@ -11,12 +11,12 @@ El proyecto destaca por su diseño **Glassmorphism**, transiciones suaves entre 
 ## ✨ Características Principales
 
 *   **Diseño UI/UX Premium (Glassmorphism):** Interfaces modernas con desenfoque de fondo (blur), orbes animados de gradiente líquido y una paleta de colores neón adaptativa.
-*   **Modo Oscuro/Claro (Theme Toggle):** Integración nativa de temas dinámicos mediante `ThemeContext` y Material UI, con un interruptor animado personalizado (Sol/Luna).
-*   **Reproductor de Radio Global (`MiniRadio`):** Un widget flotante estilo cristal que se mantiene en pantalla a través de las rutas, consumiendo el catálogo de streaming (canciones servidas desde el backend, incluyendo directorios como `musica_radio`).
+*   **Modo Oscuro/Claro (Theme Toggle):** Integración nativa de temas dinámicos mediante `ThemeContext` y Material UI, con un interruptor animado personalizado (Sol/Luna) que guarda la preferencia en el `localStorage`.
+*   **Gestión de Radio en Vivo:** Nueva página dedicada a la administración de pistas de audio (`Radio.jsx`), permitiendo subir, editar, eliminar y reproducir canciones directamente mediante tarjetas interactivas.
+*   **Reproductor de Radio Global (`MiniRadio`):** Un widget flotante estilo cristal que se mantiene en pantalla a través de las rutas, consumiendo el catálogo de streaming y reaccionando a eventos globales de reproducción.
 *   **Mascota Animada Interactiva:** Pantalla de login única protagonizada por una rana animada en SVG que reacciona a los inputs del usuario (sigue la longitud del texto, se tapa los ojos al escribir la contraseña y anima su carga).
 *   **Autenticación Segura OAuth 2.0:** Gestión de acceso mediante interceptores de **Axios** que inyectan automáticamente el Bearer Token en todas las peticiones a rutas protegidas.
 *   **Transiciones Fluidas:** Cambio de páginas animado utilizando `framer-motion` para una experiencia tipo SPA sin parpadeos.
-*   **Rutas Protegidas:** Componente `ProtectedRoute` que restringe el acceso al dashboard y redirige automáticamente a los usuarios no autenticados al login.
 
 ---
 
@@ -33,32 +33,49 @@ El proyecto destaca por su diseño **Glassmorphism**, transiciones suaves entre 
 
 ## 📂 Estructura del Proyecto
 
-El proyecto sigue una arquitectura modular y escalable, separando claramente componentes de presentación, páginas, lógica de estado y servicios HTTP:
+El proyecto sigue una arquitectura modular y escalable, separando claramente componentes de presentación, páginas, lógica de estado y servicios HTTP, tal como se refleja en el árbol principal:
 
 ```text
 /FRONTEND-CATALOGO
+├── /node_modules
+├── /public
 ├── /src
 │   ├── /assets                 # Recursos estáticos (imágenes, iconos, vectores)
 │   ├── /components             # Componentes reutilizables
-│   │   ├── /cards              # Tarjetas UI (AlbumCard.jsx, ArtistaCard.jsx)
-│   │   ├── /modals             # Modales CRUD (AlbumFormModal, ConfirmDeleteModal, etc.)
+│   │   ├── /cards              # Tarjetas UI (AlbumCard.jsx, ArtistaCard.jsx, RadioCard.jsx)
+│   │   ├── /modals             # Modales CRUD (AlbumFormModal.jsx, ArtistaFormModal.jsx, ConfirmDeleteModal.jsx, RadioFormModal.jsx)
 │   │   ├── AnimatedMascot.jsx  # Mascota interactiva del Login
-│   │   ├── Loader.jsx          # Spinner/Animación de carga global
-│   │   ├── MiniRadio.jsx       # Reproductor de música global
+│   │   ├── Loader.css          # Estilos del Spinner de carga global
+│   │   ├── Loader.jsx          # Componente Spinner/Animación
+│   │   ├── MiniRadio.css       # Estilos del reproductor global
+│   │   ├── MiniRadio.jsx       # Reproductor de música global flotante
+│   │   ├── Navbar.css          # Estilos de la barra de navegación
 │   │   ├── Navbar.jsx          # Barra de navegación superior
 │   │   ├── PageTransition.jsx  # Wrapper de animaciones de Framer Motion
 │   │   ├── ProtectedRoute.jsx  # HOC para protección de rutas privadas
+│   │   ├── ThemeToggle.css     # Animaciones del switch Sol/Luna
 │   │   └── ThemeToggle.jsx     # Switcher de Modo Oscuro/Claro
-│   ├── /context                # Contextos globales de React (ThemeContext.jsx)
-│   ├── /pages                  # Vistas principales (Albumes.jsx, Artistas.jsx, Login.jsx)
-│   ├── /services               # Lógica de conexión externa (api.js con interceptores)
+│   ├── /context                # Contextos globales de React
+│   │   └── ThemeContext.jsx    # Proveedor de estado para el tema (Dark/Light)
+│   ├── /pages                  # Vistas principales
+│   │   ├── Albumes.css / .jsx  # Gestión de Álbumes
+│   │   ├── Artistas.css / .jsx # Dashboard principal de Artistas
+│   │   ├── Login.css / .jsx    # Autenticación de usuarios
+│   │   └── Radio.jsx           # Gestión de pistas para transmisión
+│   ├── /services               
+│   │   └── api.js              # Configuración de Axios e Interceptores
+│   ├── App.css                 # Estilos globales y animaciones de fondo
 │   ├── App.jsx                 # Configuración de Layout y Rutas raíz
+│   ├── index.css               # Reset de CSS y variables base
 │   ├── main.jsx                # Punto de entrada de React y Providers
-│   └── theme.js                # Configuración global del tema de Material UI
+│   └── theme.js                # Configuración de la paleta de Material UI
 ├── .env                        # Variables de entorno locales
+├── .gitignore                  # Archivos ignorados por Git
 ├── eslint.config.js            # Configuración de linting
 ├── index.html                  # Plantilla HTML principal
+├── package-lock.json           # Árbol de dependencias exactas
 ├── package.json                # Dependencias y scripts
+├── README.md                   # Documentación del proyecto
 └── vite.config.js              # Configuración del bundler Vite
 ```
 
@@ -66,12 +83,15 @@ El proyecto sigue una arquitectura modular y escalable, separando claramente com
 
 ## 🔌 Rutas y Navegación
 
+El enrutamiento está protegido y centralizado. Estas son las vistas principales configuradas en el proyecto:
+
 | Ruta Front-end | Tipo | Descripción |
 | :--- | :--- | :--- |
-| `/login` | Pública | Pantalla de inicio de sesión OAuth 2.0 con mascota interactiva. |
-| `/artistas` | Privada | Dashboard principal. Gestión CRUD completa de los Artistas. |
-| `/albumes` | Privada | Gestión CRUD de Álbumes asociados a sus respectivos Artistas. |
-| `/*` | Fallback | Redirección automática a `/artistas` (o `/login` si no hay sesión). |
+| `/login` | Pública | Pantalla de inicio de sesión OAuth 2.0 con mascota animada que valida el acceso. |
+| `/artistas` | Privada | Dashboard principal. Gestión CRUD completa del catálogo de Artistas. |
+| `/albumes` | Privada | Gestión CRUD de Álbumes, enlazados dinámicamente con los Artistas disponibles. |
+| `/radio` | Privada | Carga y gestión de archivos MP3 para la transmisión en la `MiniRadio` flotante. |
+| `/*` | Fallback | Redirección automática a `/artistas` (o `/login` si no hay token de sesión activo). |
 
 ---
 
@@ -80,29 +100,34 @@ El proyecto sigue una arquitectura modular y escalable, separando claramente com
 Toda la comunicación con el backend (Django REST Framework) está centralizada en `/src/services/api.js`. Se utiliza un **Interceptor de Peticiones** para automatizar la seguridad:
 
 ```javascript
-api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`; // Inyección automática
+api.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`; // Inyección automática
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
     }
-    return config;
-});
+);
 ```
-*Si el token expira o es inválido, el backend responderá con código 401/403.*
+*Si el token no existe, el componente `<ProtectedRoute/>` intercepta la navegación y devuelve al usuario al `/login`.*
 
 ---
 
 ## ⚙️ Variables de Entorno (.env)
 
-Crea un archivo `.env` en la raíz del proyecto para enlazar el frontend con la configuración de la aplicación de tu backend:
+El proyecto utiliza variables de entorno para proteger los secretos de la aplicación. Crea un archivo `.env` en la raíz con la siguiente estructura:
 
 ```env
-# Credenciales OAuth 2.0 (Proporcionadas por Django Admin)
+# Credenciales OAuth 2.0 (Proporcionadas por el backend Django)
 VITE_CLIENT_ID=tu_client_id_generado_en_django
 VITE_CLIENT_SECRET=tu_client_secret_generado_en_django
 ```
 
-> **Nota:** La URL base de la API está actualmente fijada en `api.js` como `http://localhost:8000/api/`. Para entornos de producción, se recomienda moverla también al archivo `.env` como `VITE_API_URL`.
+> **Nota:** La URL base de la API está actualmente fijada en `api.js` como `http://localhost:8000/api/` y `http://localhost:8000/o/token/` para la autenticación.
 
 ---
 
@@ -127,7 +152,7 @@ VITE_CLIENT_SECRET=tu_client_secret_generado_en_django
    ```
 
 3. **Configurar entorno:**
-   Copia las credenciales OAuth 2.0 generadas en tu backend y colócalas en el archivo `.env`.
+   Asegúrate de configurar el archivo `.env` con las claves de OAuth 2.0 correspondientes.
 
 4. **Ejecutar el servidor de desarrollo:**
    ```bash
@@ -140,19 +165,6 @@ VITE_CLIENT_SECRET=tu_client_secret_generado_en_django
    npm run build
    ```
    *Generará los archivos estáticos optimizados en la carpeta `/dist`.*
-
----
-
-## 🛑 Troubleshooting Común
-
-❌ **Error: "Network Error" o problemas de CORS al iniciar sesión / cargar datos**
-*   **Solución:** Asegúrate de que el backend de Django tenga configurado `CORS_ALLOW_ALL_ORIGINS = True` en desarrollo, o que `http://localhost:5173` esté dentro de `CORS_ALLOWED_ORIGINS`.
-
-❌ **Error: 401 Unauthorized recurrente**
-*   **Solución:** El token en tu `localStorage` puede haber expirado. Cierra sesión manualmente o limpia el almacenamiento local (F12 > Application > Local Storage > Borrar `access_token`) y vuelve a iniciar sesión. Verifica que el `client_id` y `client_secret` en el `.env` son correctos.
-
-❌ **Las imágenes de portada o fotos de artistas no cargan (Error 404)**
-*   **Solución:** El frontend asume que el backend está sirviendo archivos multimedia estáticos. Verifica que el backend tenga configurado correctamente `MEDIA_URL` y que estés ejecutando `python manage.py runserver` en el puerto 8000.
 
 ---
 
