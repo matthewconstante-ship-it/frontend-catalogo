@@ -76,6 +76,7 @@ const Albumes = () => {
             dataToSend.append('fecha_lanzamiento', formData.fecha_lanzamiento.split('T')[0]);
         }
     
+        // Solo adjunta la portada si es un archivo nuevo
         if (formData.portada instanceof File) {
             dataToSend.append('portada', formData.portada);
         }
@@ -86,7 +87,8 @@ const Albumes = () => {
                 setAlbumes([...albumes, response.data]);
                 setSnackbar({ open: true, message: 'Álbum creado con éxito', severity: 'success' });
             } else {
-                const response = await api.put(`albumes/${formData.id}/`, dataToSend, { headers: { 'Content-Type': 'multipart/form-data' } });
+                // AQUÍ USAMOS PATCH PARA NO BORRAR IMÁGENES
+                const response = await api.patch(`albumes/${formData.id}/`, dataToSend, { headers: { 'Content-Type': 'multipart/form-data' } });
                 setAlbumes(albumes.map(a => (a.id === formData.id ? response.data : a)));
                 setSnackbar({ open: true, message: 'Álbum actualizado con éxito', severity: 'success' });
             }
@@ -175,24 +177,8 @@ const Albumes = () => {
                 )}
             </Container>
 
-            {/* Modales Modulares */}
-            <AlbumFormModal 
-                open={openModal} 
-                onClose={() => setOpenModal(false)} 
-                onSave={handleSave} 
-                formData={formData} 
-                setFormData={setFormData} 
-                modalMode={modalMode} 
-                artistasDisponibles={artistasDisponibles} 
-            />
-            
-            <ConfirmDeleteModal 
-                open={openDeleteModal} 
-                onClose={() => setOpenDeleteModal(false)} 
-                onConfirm={handleDelete} 
-                title="Confirmar eliminación" 
-                itemName={formData.titulo} 
-            />
+            <AlbumFormModal open={openModal} onClose={() => setOpenModal(false)} onSave={handleSave} formData={formData} setFormData={setFormData} modalMode={modalMode} artistasDisponibles={artistasDisponibles} />
+            <ConfirmDeleteModal open={openDeleteModal} onClose={() => setOpenDeleteModal(false)} onConfirm={handleDelete} title="Confirmar eliminación" itemName={formData.titulo} />
 
             <Snackbar open={snackbar.open} autoHideDuration={4000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
                 <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} variant="filled" className="custom-alert">{snackbar.message}</Alert>

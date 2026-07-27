@@ -63,7 +63,10 @@ const Artistas = () => {
         dataToSend.append('nombre', formData.nombre);
         dataToSend.append('genero', formData.genero);
         dataToSend.append('biografia', formData.biografia);
-        if (formData.foto instanceof File) dataToSend.append('foto', formData.foto);
+        // Solo adjunta la foto si es un archivo nuevo y no una URL
+        if (formData.foto instanceof File) {
+            dataToSend.append('foto', formData.foto);
+        }
 
         try {
             if (modalMode === 'crear') {
@@ -71,7 +74,8 @@ const Artistas = () => {
                 setArtistas([...artistas, response.data]);
                 setSnackbar({ open: true, message: 'Artista creado con éxito', severity: 'success' });
             } else {
-                const response = await api.put(`artistas/${formData.id}/`, dataToSend, { headers: { 'Content-Type': 'multipart/form-data' } });
+                // AQUÍ USAMOS PATCH PARA NO BORRAR IMÁGENES
+                const response = await api.patch(`artistas/${formData.id}/`, dataToSend, { headers: { 'Content-Type': 'multipart/form-data' } });
                 setArtistas(artistas.map(a => (a.id === formData.id ? response.data : a)));
                 setSnackbar({ open: true, message: 'Artista actualizado con éxito', severity: 'success' });
             }
@@ -148,7 +152,6 @@ const Artistas = () => {
                 )}
             </Container>
 
-            {/* Modales Modulares */}
             <ArtistaFormModal open={openModal} onClose={() => setOpenModal(false)} onSave={handleSave} formData={formData} setFormData={setFormData} modalMode={modalMode} />
             <ConfirmDeleteModal open={openDeleteModal} onClose={() => setOpenDeleteModal(false)} onConfirm={handleDelete} title="Confirmar eliminación" itemName={formData.nombre} />
 
