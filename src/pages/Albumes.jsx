@@ -5,7 +5,6 @@ import AddIcon from '@mui/icons-material/Add';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 
 import PageTransition from '../components/PageTransition'; 
-import MiniRadio from '../components/MiniRadio';
 import AlbumCard from '../components/cards/AlbumCard';
 import AlbumFormModal from '../components/modals/AlbumFormModal';
 import ConfirmDeleteModal from '../components/modals/ConfirmDeleteModal';
@@ -76,7 +75,6 @@ const Albumes = () => {
             dataToSend.append('fecha_lanzamiento', formData.fecha_lanzamiento.split('T')[0]);
         }
     
-        // Solo adjunta la portada si es un archivo nuevo
         if (formData.portada instanceof File) {
             dataToSend.append('portada', formData.portada);
         }
@@ -87,7 +85,6 @@ const Albumes = () => {
                 setAlbumes([...albumes, response.data]);
                 setSnackbar({ open: true, message: 'Álbum creado con éxito', severity: 'success' });
             } else {
-                // AQUÍ USAMOS PATCH PARA NO BORRAR IMÁGENES
                 const response = await api.patch(`albumes/${formData.id}/`, dataToSend, { headers: { 'Content-Type': 'multipart/form-data' } });
                 setAlbumes(albumes.map(a => (a.id === formData.id ? response.data : a)));
                 setSnackbar({ open: true, message: 'Álbum actualizado con éxito', severity: 'success' });
@@ -124,8 +121,6 @@ const Albumes = () => {
 
     return (
         <PageTransition>
-            <MiniRadio />
-
             <Container maxWidth="lg" className="albumes-page">
                 <Box className="albumes-header">
                     <Typography 

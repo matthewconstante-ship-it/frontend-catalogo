@@ -5,7 +5,6 @@ import AddIcon from '@mui/icons-material/Add';
 import LibraryMusicOutlinedIcon from '@mui/icons-material/LibraryMusicOutlined';
 
 import PageTransition from '../components/PageTransition'; 
-import MiniRadio from '../components/MiniRadio';
 import ArtistaCard from '../components/cards/ArtistaCard';
 import ArtistaFormModal from '../components/modals/ArtistaFormModal';
 import ConfirmDeleteModal from '../components/modals/ConfirmDeleteModal';
@@ -63,7 +62,6 @@ const Artistas = () => {
         dataToSend.append('nombre', formData.nombre);
         dataToSend.append('genero', formData.genero);
         dataToSend.append('biografia', formData.biografia);
-        // Solo adjunta la foto si es un archivo nuevo y no una URL
         if (formData.foto instanceof File) {
             dataToSend.append('foto', formData.foto);
         }
@@ -74,7 +72,6 @@ const Artistas = () => {
                 setArtistas([...artistas, response.data]);
                 setSnackbar({ open: true, message: 'Artista creado con éxito', severity: 'success' });
             } else {
-                // AQUÍ USAMOS PATCH PARA NO BORRAR IMÁGENES
                 const response = await api.patch(`artistas/${formData.id}/`, dataToSend, { headers: { 'Content-Type': 'multipart/form-data' } });
                 setArtistas(artistas.map(a => (a.id === formData.id ? response.data : a)));
                 setSnackbar({ open: true, message: 'Artista actualizado con éxito', severity: 'success' });
@@ -106,8 +103,6 @@ const Artistas = () => {
 
     return (
         <PageTransition>
-            <MiniRadio />
-
             <Container maxWidth="lg" className="artistas-page">
                 <Box className="artistas-header">
                     <Typography 

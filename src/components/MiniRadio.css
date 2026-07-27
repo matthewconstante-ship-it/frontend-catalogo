@@ -14,6 +14,7 @@
   to { opacity: 1; transform: translateX(0); }
 }
 
+/* Medidas originales restauradas */
 .radio-card {
   width: 220px;
   height: 310px;
@@ -137,7 +138,7 @@
   margin-bottom: auto;
 }
 
-/* Barra de Botones */
+/* Barra de Botones Original Restaurada */
 .radio-card .one .bar {
   display: flex;
   align-items: center;
@@ -184,6 +185,37 @@
 .radio-play-btn:hover {
   transform: scale(1.08);
   box-shadow: 0 6px 20px rgba(236, 72, 153, 0.6);
+}
+
+/* =========================================
+   NUEVO: BOTÓN ALEATORIO FLOTANTE
+   ========================================= */
+.play-btn-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.shuffle-btn {
+  position: absolute;
+  top: -24px; /* Lo empuja exactamente arriba del botón de play */
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 2px;
+}
+
+.shuffle-btn:hover {
+  transform: translateX(-50%) scale(1.1);
+}
+
+/* Estado cuando el aleatorio está activado (Brillo Neón Pink) */
+.shuffle-btn.active {
+  color: #ec4899;
+  filter: drop-shadow(0 0 6px rgba(236, 72, 153, 0.8));
+}
+
+.shuffle-btn.active:hover {
+  transform: translateX(-50%) scale(1.1);
 }
 
 /* Orbes Animados en Fondo */
@@ -241,12 +273,16 @@ body.light-mode .radio-control-btn {
   color: #475569;
 }
 
+body.light-mode .shuffle-btn.active {
+  color: #ec4899;
+  filter: drop-shadow(0 0 4px rgba(236, 72, 153, 0.4));
+}
+
 /* =========================================
-   COMPORTAMIENTO RESPONSIVO (WIDGET FLOTANTE)
+   COMPORTAMIENTO RESPONSIVO
    ========================================= */
 @media (max-width: 1300px) {
   .radio-sidebar-container {
-    /* Quitamos la posición de la izquierda/arriba y la mandamos abajo a la derecha */
     top: auto;
     bottom: 24px;
     left: auto;
@@ -255,7 +291,7 @@ body.light-mode .radio-control-btn {
   }
   
   .radio-card {
-    transform: scale(0.85); /* Reducimos el tamaño al 85% */
+    transform: scale(0.85); 
     transform-origin: bottom right;
   }
   
@@ -264,7 +300,6 @@ body.light-mode .radio-control-btn {
   }
 }
 
-/* Ajuste extra para pantallas de teléfonos (Móviles) */
 @media (max-width: 768px) {
   .radio-sidebar-container {
     bottom: 16px;
@@ -272,7 +307,7 @@ body.light-mode .radio-control-btn {
   }
   
   .radio-card {
-    transform: scale(0.75); /* Reducimos el tamaño al 75% */
+    transform: scale(0.75); 
   }
 
   .radio-card:hover {
@@ -280,7 +315,6 @@ body.light-mode .radio-control-btn {
   }
 }
 
-/* Nueva animación para que en móviles entre desde la derecha y no desde la izquierda */
 @keyframes fade-in-radio-mobile {
   from { opacity: 0; transform: translateX(20px); }
   to { opacity: 1; transform: translateX(0); }

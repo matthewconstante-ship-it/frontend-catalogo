@@ -44,7 +44,7 @@
 }
 
 /* =========================================
-   SELECTOR SLIDER (UIVERSE ADAPTADO)
+   SELECTOR SLIDER (UIVERSE ADAPTADO 3 PESTAÑAS)
    ========================================= */
 .radio-group {
   display: flex;
@@ -58,7 +58,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  width: 230px;
+  width: 320px;
   height: 42px;
   transition: all 0.3s ease;
 }
@@ -115,15 +115,20 @@
   color: #ffffff;
 }
 
-/* Posicionamiento para 2 Pestañas */
+/* Posicionamiento para 3 Pestañas */
 .radio-group:has(#nav-artistas:checked) .slider {
   left: 4px;
-  width: calc(50% - 4px);
+  width: calc(33.33% - 4px);
 }
 
 .radio-group:has(#nav-albumes:checked) .slider {
-  left: calc(50%);
-  width: calc(50% - 4px);
+  left: calc(33.33%);
+  width: calc(33.33% - 4px);
+}
+
+.radio-group:has(#nav-radio:checked) .slider {
+  left: calc(66.66%);
+  width: calc(33.33% - 4px);
 }
 
 /* =========================================

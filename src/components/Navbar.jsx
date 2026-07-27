@@ -9,8 +9,9 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Evaluamos en qué ruta estamos para marcar la opción activa automáticamente
   const isArtistas = location.pathname.includes('/artistas');
+  const isAlbumes = location.pathname.includes('/albumes');
+  const isRadio = location.pathname.includes('/radio');
 
   const handleLogout = () => {
     localStorage.removeItem('access_token');
@@ -28,7 +29,7 @@ const Navbar = () => {
           </Typography>
         </Box>
 
-        {/* NAVEGADOR SLIDER DESLIZANTE (Uiverse 2 opciones) */}
+        {/* NAVEGADOR SLIDER DESLIZANTE (3 opciones) */}
         <div className="radio-group">
           <div className="slider"></div>
           <div className="radio-option">
@@ -48,11 +49,23 @@ const Navbar = () => {
               type="radio"
               id="nav-albumes"
               name="navbar-switch"
-              checked={!isArtistas}
+              checked={isAlbumes}
               onChange={() => navigate('/albumes')}
             />
             <label htmlFor="nav-albumes" className="radio-label">
               Álbumes
+            </label>
+          </div>
+          <div className="radio-option">
+            <input
+              type="radio"
+              id="nav-radio"
+              name="navbar-switch"
+              checked={isRadio}
+              onChange={() => navigate('/radio')}
+            />
+            <label htmlFor="nav-radio" className="radio-label">
+              Radio
             </label>
           </div>
         </div>

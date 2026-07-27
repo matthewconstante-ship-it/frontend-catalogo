@@ -2,10 +2,12 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import Login from './pages/Login';
 import Artistas from './pages/Artistas';
 import Albumes from './pages/Albumes';
+import Radio from './pages/Radio';
 import Navbar from './components/Navbar';
+import MiniRadio from './components/MiniRadio';
 import ProtectedRoute from './components/ProtectedRoute';
 
-// Layout principal que mantiene la Navbar fija sin parpadeos
+// Layout principal que mantiene la Navbar y la Radio fijas sin parpadeos
 const AppLayout = () => {
     const location = useLocation();
     const isLoginPage = location.pathname === '/login';
@@ -19,8 +21,9 @@ const AppLayout = () => {
                 <div className="fluid-orb orb-3"></div>
             </div>
 
-            {/* La Navbar se mantiene SIEMPRE montada y fija fuera del cambio de rutas */}
+            {/* La Navbar y la Radio se mantienen SIEMPRE montadas y globales */}
             {!isLoginPage && <Navbar />}
+            {!isLoginPage && <MiniRadio />}
 
             {/* Rutas de la aplicación */}
             <Routes>
@@ -38,6 +41,14 @@ const AppLayout = () => {
                     element={
                         <ProtectedRoute>
                             <Albumes />
+                        </ProtectedRoute>
+                    } 
+                />
+                <Route 
+                    path="/radio" 
+                    element={
+                        <ProtectedRoute>
+                            <Radio />
                         </ProtectedRoute>
                     } 
                 />
